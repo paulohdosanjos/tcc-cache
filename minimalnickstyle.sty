@@ -1,0 +1,258 @@
+\newcommand{\visiblelabel}[1]{}   
+
+\newcommand{\AlgorithmName}[1]{\label{alg:#1}\visiblelabel{#1}}
+\newcommand{\AppendixName}[1]{\label{app:#1}\visiblelabel{#1}}
+\newcommand{\ClaimName}[1]{\label{clm:#1}\visiblelabel{#1}}
+\newcommand{\ConjectureName}[1]{\label{conj:#1}\visiblelabel{#1}}
+\newcommand{\CorollaryName}[1]{\label{cor:#1}\visiblelabel{#1}}
+\newcommand{\DefinitionName}[1]{\label{def:#1}\visiblelabel{#1}}
+\newcommand{\EquationName}[1]{\label{eq:#1}\text{\visiblelabel{#1}}}
+\newcommand{\ExampleName}[1]{\label{ex:#1}\visiblelabel{#1}}
+\newcommand{\FactName}[1]{\label{fact:#1}\visiblelabel{#1}}
+\newcommand{\FigureName}[1]{\label{fig:#1}\visiblelabel{#1}}
+\newcommand{\LemmaName}[1]{\label{lem:#1}\visiblelabel{#1}}
+\newcommand{\PropositionName}[1]{\label{prop:#1}\visiblelabel{#1}}
+\newcommand{\TableName}[1]{\label{tbl:#1}\visiblelabel{#1}}
+\newcommand{\TheoremName}[1]{\label{thm:#1}\visiblelabel{#1}}
+\newcommand{\SectionName}[1]{\label{sec:#1}\visiblelabel{#1}}
+\newcommand{\SubsectionName}[1]{\label{sub:#1}\visiblelabel{#1}}
+
+
+% References
+\newcommand{\Algorithm}[1]{Algorithm~\ref{alg:#1}}
+\newcommand{\Appendix}[1]{Appendix~\ref{app:#1}}
+\newcommand{\Claim}[1]{Claim~\ref{clm:#1}}
+\newcommand{\Conjecture}[1]{Conjecture~\ref{conj:#1}}
+\newcommand{\Corollary}[1]{Corollary~\ref{cor:#1}}
+\newcommand{\Definition}[1]{Definition~\ref{def:#1}}
+\newcommand{\Equation}[1]{Eq.\:\eqref{eq:#1}}
+\newcommand{\Example}[1]{Example~\ref{ex:#1}}
+\newcommand{\Fact}[1]{Fact~\ref{fact:#1}}
+\newcommand{\Figure}[1]{Figure~\ref{fig:#1}}
+\newcommand{\Lemma}[1]{Lemma~\ref{lem:#1}}
+\newcommand{\Proposition}[1]{Proposition~\ref{prop:#1}}
+\newcommand{\Section}[1]{Section~\ref{sec:#1}}
+\newcommand{\Subsection}[1]{Subsection~\ref{sub:#1}}
+\newcommand{\Table}[1]{Table~\ref{tbl:#1}}
+\newcommand{\Theorem}[1]{Theorem~\ref{thm:#1}}
+
+
+
+%%%%% MISC COMMANDS %%%%%
+% Adjusting space
+\newcommand{\posA}{\vspace{6pt}}
+\newcommand{\posB}{\vspace{12pt}}
+\newcommand{\negA}{\vspace{-6pt}}
+\newcommand{\negB}{\vspace{-12pt}}
+\newcommand{\negC}{\vspace{-18pt}}
+
+
+% Comment out text
+\newcommand{\mycomment}[1]{}
+
+%%%%% MATH ENVIRONMENT %%%%%
+\allowdisplaybreaks[3]      % Allow page breaks in the middle of displayed equations
+
+
+% Define "blackboard bold" symbols for sets of numbers: N, Z, Q, R, C
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bE}{\mathbb{E}}
+\newcommand{\bF}{\mathbb{F}}
+\newcommand{\bN}{\mathbb{N}}        % Integers n >= 0
+\newcommand{\bP}{\mathbb{P}}
+\newcommand{\bQ}{\mathbb{Q}}
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bZ}{\mathbb{Z}}
+\newcommand{\bZplus}{\mathbb{Z}_+}    % Integers n > 0
+\newcommand{\bB}{\mathbb{B}}
+\newcommand{\bM}{\mathbb{M}}
+\newcommand{\bD}{\mathbb{D}}
+
+% Define shortcuts for calligraphic letters
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+% Define shortcuts for letters with tildes
+\newcommand{\tA}{\tilde{A}}
+\newcommand{\tB}{\tilde{B}}
+\newcommand{\tC}{\tilde{C}}
+\newcommand{\tD}{\tilde{D}}
+\newcommand{\tE}{\tilde{E}}
+\newcommand{\tF}{\tilde{F}}
+\newcommand{\tG}{\tilde{G}}
+\newcommand{\tH}{\tilde{H}}
+\newcommand{\tI}{\tilde{I}}
+\newcommand{\tJ}{\tilde{J}}
+\newcommand{\tK}{\tilde{K}}
+\newcommand{\tL}{\tilde{L}}
+\newcommand{\tM}{\tilde{M}}
+\newcommand{\tN}{\tilde{N}}
+\newcommand{\tO}{\tilde{O}}
+\newcommand{\tP}{\tilde{P}}
+\newcommand{\tQ}{\tilde{Q}}
+\newcommand{\tR}{\tilde{R}}
+\newcommand{\tS}{\tilde{S}}
+\newcommand{\tT}{\tilde{T}}
+\newcommand{\tU}{\tilde{U}}
+\newcommand{\tV}{\tilde{V}}
+\newcommand{\tW}{\tilde{W}}
+\newcommand{\tX}{\tilde{X}}
+\newcommand{\tY}{\tilde{Y}}
+\newcommand{\tZ}{\tilde{Z}}
+
+\newcommand{\tb}{\tilde{b}}
+\newcommand{\tc}{\tilde{c}}
+\newcommand{\td}{\tilde{d}}
+\newcommand{\tf}{\tilde{f}}
+\newcommand{\tr}{\tilde{r}}
+\newcommand{\tx}{\tilde{x}}
+\newcommand{\ty}{\tilde{y}}
+\newcommand{\tz}{\tilde{z}}
+
+
+% Define shortcuts for letters with hats
+\newcommand{\hA}{\hat{A}}
+\newcommand{\hB}{\hat{B}}
+\newcommand{\hC}{\hat{C}}
+\newcommand{\hD}{\hat{D}}
+\newcommand{\hE}{\hat{E}}
+\newcommand{\hF}{\hat{F}}
+\newcommand{\hG}{\hat{G}}
+\newcommand{\hH}{\hat{H}}
+\newcommand{\hI}{\hat{I}}
+\newcommand{\hJ}{\hat{J}}
+\newcommand{\hK}{\hat{K}}
+\newcommand{\hL}{\hat{L}}
+\newcommand{\hM}{\hat{M}}
+\newcommand{\hN}{\hat{N}}
+\newcommand{\hO}{\hat{O}}
+\newcommand{\hP}{\hat{P}}
+\newcommand{\hQ}{\hat{Q}}
+\newcommand{\hR}{\hat{R}}
+\newcommand{\hS}{\hat{S}}
+\newcommand{\hT}{\hat{T}}
+\newcommand{\hU}{\hat{U}}
+\newcommand{\hV}{\hat{V}}
+\newcommand{\hW}{\hat{W}}
+\newcommand{\hX}{\hat{X}}
+\newcommand{\hY}{\hat{Y}}
+\newcommand{\hZ}{\hat{Z}}
+
+\newcommand{\hb}{\hat{b}}
+\newcommand{\hf}{\hat{f}}
+\newcommand{\hv}{\hat{v}}
+\newcommand{\hx}{\hat{x}}
+\newcommand{\hy}{\hat{y}}
+\newcommand{\hz}{\hat{z}}
+
+
+
+
+% Arithmetic symbols
+\newcommand{\plusminus}{\pm}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\Abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\smallfrac}[2]{{\textstyle \frac{#1}{#2}}}
+\newcommand{\smallsum}[2]{{\textstyle \sum_{#1}^{#2}}}
+\newcommand{\smallprod}[2]{{\textstyle \prod_{#1}^{#2}}}
+\newcommand{\sumstack}[1]{\sum_{\substack{#1}}}
+\newcommand{\iverson}[1]{\left[\; #1 \;\right]}
+\newcommand{\argmax}{\operatornamewithlimits{arg\,max}}
+
+% Sets and logic
+\newcommand{\union}{\cup}                                       
+\newcommand{\dunion}{\,{\dot{\cup}}\,}                            % Disjoint union
+\newcommand{\Union}{\bigcup}
+\newcommand{\intersect}{\cap}                                   
+\newcommand{\Intersect}{\bigcap}
+\newcommand{\Wedge}{\bigwedge}
+\newcommand{\Vee}{\bigvee}
+%\newcommand{\set}[1]{\left \{ #1 \right \}}                     % Set notation: { ... }
+\newcommand\setst[3][]{#1\{ #2 \,:\, #3 #1\}}        % Set notation: { ... | ... }
+\WithSuffix\newcommand\setst*[2]{ \left\{#1 \,:\, #2 \right\} }
+
+\newcommand{\multiset}[1]{\{\{\; #1 \;\}\}}                     % Multiset notation
+\newcommand{\multisetst}[2]{\{\{\; #1 \,:\, #2 \;\}\}}
+\newcommand{\card}[1]{\abs{#1}}
+\newcommand{\Card}[1]{\Abs{#1}}
+\newcommand{\symdiff}{\oplus}
+\newcommand{\nimplies}{\slashed{\Longrightarrow}}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+
+% Matroid theory
+\newcommand{\mat}{\mathbf{M}}
+\newcommand{\freemat}{{\mathbf{F}}}
+\newcommand{\dirsum}{\oplus}
+\newcommand{\circuit}{\cC}
+
+% Analysis / Topology
+\newcommand{\limn}{\lim_{n \rightarrow \infty}}
+\newcommand{\cRm}{\ensuremath{\mathscr{R}}\xspace}      % Reimann Integrable Functions
+\newcommand{\cLb}{\ensuremath{\mathscr{L}}\xspace}      % Lebesgue Integrable Functions
+\newcommand{\boundary}{\partial}                        % Package mathabx gives a nicer partial...
+
+% Probability
+\newcommand{\given}{\mid}
+\newcommand{\event}{\cE}
+\newcommand{\prob}[1]{\operatorname{Pr}\left[\,#1\,\right]}               % Probability: Pr[ .. ] 
+\newcommand{\probg}[2]{\operatorname{Pr}\left[\,#1 \:\mid\: #2\,\right]}  % Probability: Pr[ .. | ..  ]
+\newcommand{\probover}[2]{\operatorname{Pr}_{#1}\left[\, #2 \,\right]}    % Probability: Pr_..[ .. ]
+\newcommand{\proboverg}[3]{\operatorname{Pr}_{#1}\left[\, #2 \:\mid\: #3\,\right]}    % Probability: Pr_..[ .. ]
+\newcommand{\expect}[1]{\operatorname{E}\left[\,#1\,\right]}              % Expectation: E[ blah ]
+\newcommand{\expectsmall}[1]{\operatorname{E}[\,#1\,]}
+\newcommand{\expectBig}[1]{\operatorname{E}\Big[\,#1\,\Big]}
+\newcommand{\expectBigg}[1]{\operatorname{E}\Bigg[\,#1\,\Bigg]}
+\newcommand{\expectg}[2]{\operatorname{E}\left[\,#1 \,\mid\, #2\,\right]} % Expectation: E[ .. | .. ]
+\newcommand{\expectover}[2]{\operatorname{E}_{#1}\left[\,#2\,\right]}     % Expectation: E..[ .. ]
+\newcommand{\expectoverg}[3]{\operatorname{E}_{#1}\left[\,#2 \,\mid\, #3\right]}     % Expectation: E..[ .. ]
+\newcommand{\var}[1]{\operatorname{Var}\left[\,#1\,\right]}               % Variance: Var[ .. ] 
+\newcommand{\varg}[2]{\operatorname{Var}\left[\,#1 \,\mid\, #2\,\right]}  % Variance: Var[ .. | .. ] 
+\newcommand{\covar}[2]{\operatorname{Cov}\left[\,#1,#2\,\right]}          % Covariance: Cov[ X,Y ] 
+
+% Linear algebra
+\newcommand{\transpose}{^{\textsf{T}}}                                    
+\newcommand{\mtranspose}{^{-\textsf{T}}}                                    
+\newcommand{\smallnorm}[1]{\lVert #1 \rVert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+%\renewcommand{\det}{\operatorname{det}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\minor}[3]{#1_{\mathrm{del}(#2,#3)}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Perp}{^{\perp}}
+\newcommand{\inner}[2]{\langle\: #1 ,\, #2 \:\rangle}
+\newcommand{\tensor}{\otimes}
+%\renewcommand{\vec}[1]{\mathbf{#1}}                    % Display vectors as bold text
+\newenvironment{smallpmatrix}                          % For using matrices in inline math
+{\left(\begin{smallmatrix}}
+{\end{smallmatrix}\right)}
+
+
+\newenvironment{proofof}[1]{\begin{proof}(of #1)~}{\end{proof}}

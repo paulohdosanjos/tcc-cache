@@ -1,0 +1,359 @@
+% LTeX: language=pt-br
+\documentclass[a4paper,oneside,reqno,12pt]{amsart}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[hyperref=true,%
+            backend=biber,%
+            language=english,%
+            doi=false,%
+            url=true,%
+            isbn=false,%
+            firstinits=true,% 
+            urldate=short,%
+            sortcites=true,%
+            style=numeric,%
+            maxcitenames=2,%
+            maxbibnames=1000,%
+            arxiv=abs,%
+            related=true,%
+            backref=false,%
+            abbreviate=false,%
+            dateabbrev=false]{biblatex}
+\addbibresource{bib.bib}
+%----------------------------
+
+
+
+\usepackage{amssymb}
+\usepackage{bbm} % for blackboard 1, i.e., \mathbbm{1}
+\usepackage{bm}
+\usepackage{mathtools}          % already includes amsmath
+\usepackage{amsthm}
+\usepackage{mathrsfs}           % for \mathscr
+
+
+\usepackage{suffix}
+\usepackage{mathtools}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{color}
+\usepackage{nicefrac}
+\usepackage[left=2.25cm,right=2.25cm]{geometry}
+
+
+\makeatletter
+\def\@setdate{Data:\ \@date}
+\def\@setaddresses{\vfill\par
+  \nobreak \begingroup
+\footnotesize
+  \def\author##1{\nobreak\addvspace\bigskipamount}%
+  \def\\{\unskip, \ignorespaces}%
+  \interlinepenalty\@M
+  \def\address##1##2{\begingroup
+    \par\addvspace\bigskipamount\noindent
+    \@ifnotempty{##1}{(\ignorespaces##1\unskip) }%
+    {\scshape\ignorespaces##2}\par\endgroup}%
+  \def\curraddr##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\noindent{\itshape Endereço}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      ##2\par}\endgroup}%
+  \def\email##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\noindent{\itshape E-mail}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      \ttfamily##2\par}\endgroup}%
+  \def\urladdr##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\indent{\itshape URL}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      \ttfamily##2\par}\endgroup}%
+  \addresses
+  \endgroup
+}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                      %%
+%%         COLOR MACROS                 %%
+%%                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{xcolor}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\purple}[1]{{\color{purple}#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                      %%
+%%         CUSTOM PACKAGES              %%
+%%                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{notation}
+\usepackage{decorated}
+\usepackage{minimalnickstyle}
+\usepackage{theorems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,%
+            pdfauthor={Paulo Henrique Albuquerque dos Anjos de Souza},%
+            pdftitle={Reunião 7 de Maio},%
+            % colorlinks=true,%
+            % linkcolor=black,%
+            % citecolor=black,%
+            % urlcolor=black,%
+            hypertexnames=true,%
+            bookmarks=true]{hyperref}
+\usepackage{cleveref}
+\else
+\fi
+
+\renewcommand*{\bibfont}{\small}
+
+\begin{document}
+
+\baselineskip=1.2\baselineskip
+\frenchspacing
+
+\pagenumbering{roman}
+% \include{title-page-english}
+% \include{title-page-port}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\title{%
+{\small\sl Tcc}\\
+\smallskip
+Algoritmos de predição para caching}
+
+\author{%
+Paulo Henrique Albuquerque dos Anjos de Souza \\
+{\tiny\emph{Orientador}:  Victor Sanches Portella}
+}
+%
+% \address{Instituto de Matemática e Estatística, Universidade de São
+%   Paulo, R. do Matão 1010, 05508-090, São Paulo, SP}
+%
+\email{paulodosanjos@usp.br}
+
+\date{\today}
+\maketitle
+
+\pagestyle{plain}
+\footskip=25pt
+
+\vspace{-20pt}
+
+
+\section{Introdução}
+\subsection{Descrição do problema de paginação}
+
+\label{sec:intro}
+
+O problema de paginação (cache) surge num sistema de memória de dois níveis. Uma memória rápida ou cache guarda $k$ páginas e uma memória lenta guarda $n$ páginas.
+
+Uma sequência de pedidos de páginas é fornecida e deve ser satisfeita em ordem. Para que um pedido seja satisfeito, a página deve estar no cache; nesses casos, dizemos que houve um "cache hit". Quando a página em questão não está presente no cache, acontece um "cache miss" e uma ação deve ser tomada: uma página deve ser movida (descartada) do cache para a memória lenta para abrir espaço para a página faltante, usando alguma regra de substituição \footnote{Podemos imaginar que o cache começa vazio ou com alguma configuração inicial arbitrária. Em nossas análises, estaremos mais interessados nos comportamentos assintóticos; então, as condições iniciais pouco importam.
+
+Por enquanto, não especificamos o funcionamento específico do cache. Por exemplo, se é permitido trazer uma página para o cache sem que haja um cache miss, ou se é permitido trazer múltiplas páginas de uma vez. Depois, poderemos modelar esse sistema de dois níveis como um autômato que pode tomar variadas ações como essas citadas e que pode efetivamente alterar o cache como quiser, mas isso não alterará seu desempenho comparado com o cache simples.}. O custo para essa sequência de pedidos é a quantidade total de cache misses.
+
+A solução para o problema de paginação é um algoritmo que minimiza o custo. Essencialmente, o algoritmo deve implementar a regra de substituição.
+
+\subsection{Algoritmos online vs offline e análise competitiva}
+
+Estamos particularmente interessados em um cenário "online", onde os pedidos de páginas são servidos um por vez. O algoritmo, então, deve tomar decisões sequencialmente sem conhecimento dos pedidos futuros. 
+
+Conforme veremos em mais detalhes em seguida, num cenário online, geralmente é inútil pensar em uma métrica de desempenho absoluta, como uma análise de pior caso: de forma geral, é possível encontrar uma entrada patológica que incorre um custo ilimitado para qualquer algoritmo online, o que torna quase impossível a comparação de algoritmos baseada nessa métrica. Além disso, desenhar algoritmos que buscam minimizar o custo não faz muito sentido aqui.
+
+Portanto, buscamos outra forma de analisar e comparar algoritmos online. Comparamos seu desempenho com o desempenho de um algoritmo offline que processa a mesma sequência de entrada. Chamamos isso de análise competitiva.
+
+Intuitivamente, é como se cada sequência de entrada tivesse um custo intrínseco, que seria o custo incorrido pelo melhor algoritmo offline possível, um que sabe toda a sequência de pedidos a priori e, portanto, pode ajustar suas decisões com conhecimento do futuro.
+
+Assim, a razão entre o custo de um algoritmo online com o de um algoritmo offline ótimo nos dá uma base teórica mais significativa para poder comparar algoritmos online.
+
+\subsection{Formalização do problema}
+
+Sejam $\Sigma$ o conjunto de páginas numeradas de $1$ a $|\Sigma|=n$ e $\sigma_t \in [1,n]$ a sequência de pedidos. 
+
+Definimos como $S_t \subset \Sigma$ o estado do cache imediatamente antes de servir o pedido do tempo $t$. A capacidade do cache é $k$ e supomos, sem perda de generalidade, que $S_1 = [1,k]$.
+
+A sequência $\sigma$ é servida de forma online. No tempo $t$, o cache funciona da seguinte maneira: caso $\sigma_t \in S_t$, então $S_{t+1} = S_t$, caso contrário, escolhe um elemento $\omega_t$ para sair do cache e ser substituído por $\sigma_t$, isto é, $S_{t+1} = (S_t - \{\omega_t\}) \cup \{\sigma_t\}$. Por conveniência, definimos $\{\omega_t\} = \emptyset$ quando $\sigma_t \in S_t$.
+
+Um algoritmo $A$ que resolve o problema deve implementar uma política que escolhe $\omega_t$ para todo $t$. O custo incorrido $f_A(\sigma)$ é o número de cache misses:
+
+\[ f_A(\sigma) = \sum_{t = 1}^{|\sigma|} \mathbf{1}(\sigma_t \notin S_t)\]
+
+\subsection{Políticas clássicas}
+
+Dada a descrição do problema, vejamos agora quais ações tomar (política) após uma página faltante. 
+
+Uma regra simples intuitiva é que o cache não deveria descartar páginas que serão requisitadas no futuro próximo. Um algoritmo online deve tomar essa decisão sem conhecimento dos pedidos futuros. Primeiro, olharemos para os algoritmos clássicos determinísticos.
+
+Os algoritmos clássicos implementam as seguintes políticas:
+
+Least Recently Used (LRU): descarta a página no cache cujo pedido mais recente ocorreu mais no passado.
+
+First-in, First-out (FIFO): descarta a página que está há mais tempo no cache.
+
+Least Frequently Used (LFU): descarta a página no cache que foi menos requisitada no passado.
+
+Cada política envolve um custo computacional distinto. Mas o foco inicial é o custo do problema de paginação, isto é, a quantidade de cache misses numa sequência de pedidos.
+
+Voltaremos para esses algoritmos clássicos depois.
+
+\subsection{Por que análise de pior caso não faz sentido para algoritmos online}
+
+Aqui, começamos a fixar alguma notação.
+
+Sejam $\sigma = (\sigma_1, \sigma_2, ... , \sigma_N)$ a sequência de pedidos e $A$ um algoritmo (online) determinístico para o problema de cache.
+
+Como sabemos exatamente as ações que $A$ toma quando serve $\sigma$, podemos calcular seu custo $f_A(\sigma)$:
+
+\[f_A(\sigma) = \text{\# cache misses quando $A$ serve } \sigma\]
+
+Foi dito que, independente de $A$, existe uma sequência patológica $\sigma_p$ tal que $f_A(\sigma_p) = N$, ou seja, podemos construir uma sequência que faz $A$ falhar em todos os pedidos. Isso torna a análise de pior caso inútil para comparar algoritmos online.
+
+Argumento: Suponha $n  = k + 1$.
+
+bla bla bla
+
+@@ Evidentemente, para qualquer outro n maior o resultado se mantém, visto que estamos interessados em qualquer entrada mais patológica: essa é a análise de pior caso. Como formalizar isso?
+
+\subsection{Política ótima}
+
+Belady (1967) propôs um simples algoritmo offline ótimo para o problema de paginação. A política do algoritmo de Belady é descartar a página que permanecerá sem pedidos pelo maior tempo no futuro. Essa política é chamada de Furthest-in-the-Future ou algoritmo MIN. Aqui chamaremos simplesmente de OPT.
+
+A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante.
+
+@@ Mas já que o objetivo ultimamente é adentrar a fundo no problema, acho que vale a pena pelo menos se familiarizar com as demonstrações clássicas.
+
+\section{C-competitividade}
+
+Agora, munidos de um algoritmo ótimo real, definimos formalmente a noção de competitividade:
+
+\begin{definition}
+Um algoritmo online para o problema de paginação $A$ é dito C-competitivo se existe uma constante b tal que para toda sequência de pedidos $\sigma$:
+
+\[f_A(\sigma) \leqslant C \times f_{OPT}(\sigma) + b\]
+
+para alguma constante $b$ independente de $N$.
+\end{definition}
+
+Vemos aqui a ideia de medir o desempenho de um algoritmo online como a razão de custos entre o algoritmo offline ótimo. $C$ é chamado de coeficiente de competitividade. Se tomarmos o menor $C$ que satisfaça a definição para o algoritmo $A$, denotamos o por $C_A$, o coeficiente competitivo de $A$.
+
+A partir daí, podemos nos perguntar qual o coeficiente de competitividade das estratégias clássicas LRU, FIFO e LFU e portanto, qual, baseado nessa métrica, é a melhor política?
+
+Antes de responder essas perguntas, vejamos um resultado geral. Provaremos uma cota inferior no coeficiente de competitividade de algoritmos online determinísticos.
+
+\subsection{Cota inferior para algoritmos online determinísticos}
+
+\begin{theorem}
+\label{teorema1}
+Todo algoritmo de paginação online determinístico $A$ tem coeficiente de competitividade ao menos $k$. Isto é, $C_A \geqslant k$.
+\end{theorem}
+
+\begin{proof}
+
+Fixemos $n = k + 1$. Sabemos que, como $A$ é determinístico, existe uma sequência $\sigma_p$ que faz $A$ falhar em todos os $T = |\sigma_p|$ pedidos. Calculemos $f_{FIF}(\sigma_p)$. 
+
+Seja $\tau_t(i)$ o menor tempo $t'$ maior que $t$ tal que $\sigma_{t'} = i$, ou seja, é o tempo do próximo pedido da página $i$ a partir de $t$.
+
+
+
+Suponha que em algum ponto da sequência ocorreu um cache miss. Evidentemente, OPT deve escolher uma página $p$ para descartar dentre $k$ candidatas, o tamanho do cache. Devido a política de OPT (Furthest-in-the-Future), $p$ só poderá ser solicitada novamente depois de todas as outras $k - 1$ páginas, caso contrário, ela não teria sido escolhida. E, como todas essas outras $k - 1$ páginas estão no cache, só ocorrerá cache hits, de fato, no mínimo $k - 1$, no caso em que cada outra página é solicitada somente uma vez.
+
+Ou seja, OPT segue cada falha com ao menos $k-1$ acertos. Daí segue que:
+
+\[\text{\# cache misses} + \text{\# cache hits} = N\]
+
+\[ \text{\# cache hits} \geqslant \text{\# cache misses} \times (k-1)\]
+
+\[\text{\# cache misses} \leqslant N/k\]
+
+\[f_{OPT}(\sigma_p) \leqslant f_A(\sigma_p) / k\]
+
+\[f_A(\sigma_p)/f_{OPT}(\sigma_p) \geqslant k\]
+
+Logo, $C_A \geqslant k$.
+\end{proof}
+
+
+
+\subsection{Competitividade do LRU}
+
+Finalmente, calculamos o coeficiente de competitividade para a estratégia LRU, que descarta a página com pedido recente mais antigo.
+
+\begin{theorem}
+O coeficiente de competitividade do algoritmo LRU é igual ao tamanho do cache. Isto é, $C_{LRU} = k$.
+\end{theorem}
+
+\begin{proof}
+Seja $\sigma$ uma sequência qualquer. Dividimos $\sigma$ em blocos $b_1, b_2, ... b_{m}$, onde 
+\begin{itemize}
+    \item $b_1$ é o maior prefixo de $\sigma$ que contém no máximo $k$ páginas distintas.
+    \item $b_i$ ($1 < i \le m$) começa imediatamente após $b_{i-1}$ e termina no ponto anterior ao pedido que faria o total de páginas distintas no bloco ultrapassar $k$. 
+\end{itemize}
+
+Nossa prova consiste em contar a quantidade de cache misses para LRU e OPT dentro dos blocos.
+
+Considere o ponto em que ocorreu um cache miss para o pedido de uma página $p$ no bloco $b$.
+
+Nesse ponto, $p$ é a página mais recentemente solicitada e, para a política LRU, está no fim da fila de prioridade para sair novamente. Observe que ela não voltará ao início da fila enquanto o bloco $b$ não acabar. De fato, o cache nesse ponto contém $k-1$ páginas com prioridade de saída maior que $p$ e, pela definição de bloco, ocorrerão pedidos a no máximo $k-1$ páginas distintas: $p$ está garantido de não sair novamente nesse bloco. Como $p$ é arbitrário, segue que cada página de um bloco pode aumentar em no máximo um o custo total e como há $k$ páginas por bloco, um bloco pode falhar no máximo $k$ vezes. Então, LRU incorre um custo no máximo $km$, onde $m$ é a quantidade de blocos em $\sigma$.
+
+Para OPT, o argumento é um pouco diferente. Considere o bloco $b_1$ mais o primeiro pedido $p$ de $b_2$. Esse conjunto contém $k+1$ páginas distintas, e como o cache tem tamanho $k$, nenhum algoritmo poderá servir esse conjunto sem falhar ao menos uma vez. Após servir o pedido $p$, o cache deve conter somente $k-1$ páginas diferentes de $p$. Mas, como $\sigma_2$ é maximal, o restante de $\sigma_2$ mais o primeiro pedido de $\sigma_3$ contém pedidos para $k$ páginas diferentes de $p$, incorrendo em pelo menos uma falta nesse conjunto. E assim por diante, resultando em pelo menos $b - 1$ cache misses (se houver um só bloco OPT não falha).
+
+Então, 
+
+\[f_{LRU}(\sigma)/f_{OPT}(\sigma) \le kb/(b-1)\]
+
+Segue que existem sequências arbitrariamente longas em que LRU erra no máximo $k$ vezes menos do que OPT.
+
+Pela definição de coeficiente de competitividade, fica fácil ver que $C_{LRU} \ge k$. Pelo Teorema \ref{teorema1}, nenhum algoritmo online determinístico pode ter coeficiente maior que $k$. Logo, $C_{LRU} = k$.
+\end{proof}
+
+
+\subsection{Prova de otimalidade da política Furthest-in-the-Future}
+
+\section{Adversários}
+
+\begingroup
+\setstretch{1.2}
+\printbibliography
+\endgroup
+
+\normalsize
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                      %%
+%%         SIGNATURE STUFF              %%
+%%                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \hfill
+% São Paulo, \makeatletter\@date\makeatother.
+
+% \vspace{1.5cm}
+
+% \hfill
+% {\em Host: Yoshiharu Kohayakawa}
+
+\end{document}
+
+%%% Local Variables:
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-master: t
+%%% default-input-method: portuguese-prefix
+%%% End:
