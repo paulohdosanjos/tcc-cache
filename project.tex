@@ -13,7 +13,7 @@
             firstinits=true,% 
             urldate=short,%
             sortcites=true,%
-            style=numeric,%
+            style=authoryear,%
             maxcitenames=2,%
             maxbibnames=1000,%
             arxiv=abs,%
@@ -22,6 +22,12 @@
             abbreviate=false,%
             dateabbrev=false]{biblatex}
 \addbibresource{bib.bib}
+
+
+
+\usepackage[textsize=scriptsize]{todonotes}
+\newcommand{\vred}[1]{\todo[inline,color=red!30]{\small\textbf{Victor:} #1}}
+\newcommand{\vblue}[1]{\todo[inline,color=blue!30]{\small\textbf{Victor:} #1}}
 %----------------------------
 
 
@@ -164,6 +170,8 @@ Visão geral do TCC, organização, objetivos, etc...
 
 \section{O problema de caching}
 
+
+
 O problema de caching (ou de paginação) surge num sistema de memória de dois níveis. Uma memória rápida ou cache guarda \(k\) itens ou páginas e uma memória lenta guarda \(n\) páginas.
 
 Uma sequência de páginas, chamada de sequência de entrada ou sequência de pedidos, é fornecida e deve ser servida em ordem. Para que seja servida, todos os pedidos \(p\) devem ser satisfeitos, isso acontece quando (i) \(p\) está no cache; nesse casos, dizemos que houve um \emph{acerto de cache}; (ii) \(p\) não está no cache e uma página \(q\) (escolhida por um algoritmo de acordo com uma regra de substituição) é descartada do cache para que \(p\) entre; dizemos, nesse caso, que houve uma \emph{falha de cache}. O custo do algoritmo é a quantidade de falhas de cache, que buscamos minimizar em um dado contexto.
@@ -194,7 +202,8 @@ Cada política envolve um custo computacional distinto. Mas o foco é o custo do
 
 \subsubsection{Política ótima}
 
-\textbf{Belady} (1967) propôs um simples algoritmo ótimo para o problema de paginação. A política do algoritmo de Belady é descartar a página que permanecerá sem pedidos pelo maior tempo no futuro. Essa política é chamada de \textit{Furthest-in-the-Future} (\textbf{FIF}). Observe que essa política pressupõe o conhecimento de toda a entrada a priori; o algoritmo é dito \textbf{offline}. Evidentemente, não é possível implementar essa política explicitamente num cenário online. Mesmo assim, ela será útil como metrica de comparação para algorimos online. A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante.
+\vred{Use biblatex para citações. Mudei o estilo para authoryear para se encaixar com o que você tinha escrito, e mudei a citação abaixo como exemplo.}
+\textcite{Belady66} propôs um simples algoritmo ótimo para o problema de paginação. A política do algoritmo de Belady é descartar a página que permanecerá sem pedidos pelo maior tempo no futuro. Essa política é chamada de \textit{Furthest-in-the-Future} (\textbf{FIF}). Observe que essa política pressupõe o conhecimento de toda a entrada a priori; o algoritmo é dito \textbf{offline}. Evidentemente, não é possível implementar essa política explicitamente num cenário online. Mesmo assim, ela será útil como metrica de comparação para algorimos online. A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante.
 
 \subsubsection{Formalização inicial}
 
