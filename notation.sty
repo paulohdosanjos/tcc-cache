@@ -1,3 +1,18 @@
+% Colchetes 
+% \sqbrac{x}
+% \sqbrac[\Bigg]{\sum_{i \in I} x_i}
+\newcommand{\sqbrac}[2][]{#1[{#2}#1]}
+
+% Função indicadora
+\newcommand{\ind}[1]{\mathbbm{1}\bigl[ #1 \bigr]}
+
+% Notação < > para sequência
+% 
+\DeclarePairedDelimiter\angb{\langle}{\rangle}
+
+% Algoritmos
+\newcommand{\opt}[1]{\textbf{OPT}(#1)}
+
 % Bold math letters
 % \mbf{f} \in \mathcal{F}
 \newcommand*{\mbf}[1]{\mathbf{#1}}
@@ -52,11 +67,6 @@
 % set of sequences of elements of a set
 % s \in \Seq(D)
 \DeclareMathOperator{\Seq}{Seq}
-
-% square brackets
-% \sqbrac{x}
-% \sqbrac[\Bigg]{\sum_{i \in I} x_i}
-\newcommand{\sqbrac}[2][]{#1[{#2}#1]}
 
 % Tilde big-O notation
 % \tildeO(m)
