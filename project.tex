@@ -11,7 +11,8 @@
             doi=false,%
             url=true,%
             isbn=false,%
-            firstinits=true,% 
+            %firstinits=true,% 
+            giveninitis=true,% 
             urldate=short,%
             sortcites=true,%
             style=authoryear,%
@@ -28,10 +29,12 @@
 
 \usepackage[textsize=scriptsize]{todonotes}
 \newcommand{\vred}[1]{\todo[inline,color=red!30]{\small\textbf{Victor:} #1}}
-\newcommand{\vredok}[1]{\todo[inline,color=red!30]{\small\colorbox{green!30}{\textbf{Victor:}} #1}}
+%\newcommand{\vredok}[1]{\todo[inline,color=red!30]{\large\(\checkmark\)\small\textbf{Victor:} #1}}
+\newcommand{\vredok}[1]{\todo[inline,color=red!30]{ok\small\textbf{Victor:} #1}}
 \newcommand{\rednote}[1]{\todo[color=red!30]{\small\textbf{Victor:} #1}}
 \newcommand{\vblue}[1]{\todo[inline,color=blue!30]{\small\textbf{Victor:} #1}}
-\newcommand{\vblueok}[1]{\todo[inline,color=blue!30]{\small\colorbox{green!30}{\textbf{Victor:}} #1}}
+%\newcommand{\vblueok}[1]{\todo[inline,color=blue!30]{\large\(\checkmark\)\small\textbf{Victor:} #1}}
+\newcommand{\vblueok}[1]{\todo[inline,color=blue!30]{ok\small\textbf{Victor:} #1}}
 \newcommand{\vgreen}[1]{\todo[inline,color=green!30]{\small\textbf{Paulo:} #1}}
 %----------------------------
 
@@ -174,6 +177,8 @@ Paulo Henrique Albuquerque dos Anjos de Souza \\
 
 Visão geral do TCC, organização, objetivos, etc...
 
+Descrição informal do problema de caching e predições, motivações. Tudo por cima que será aprofundado nas seções seguintes. Usar como base a discussão do livro, THODORIS e Wei20.
+
 \section{O problema de caching}
 
 
@@ -183,10 +188,10 @@ Visão geral do TCC, organização, objetivos, etc...
 }
 
 
-O problema de caching (ou de paginação) surge num sistema de memória de dois níveis. Uma memória rápida ou cache guarda \(k\) itens ou páginas e uma memória lenta guarda \(n\) páginas.
+O problema de \emph{caching} (ou de paginação) considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(n\). 
 \vgreen{Um detalhezinho: percebi que no texto eu tava usando as palavras "paginação" e "caching". Seria bom manter apenas uma, por conformidade. Você tem alguma preferência? Eu gostaria de usar a [palavra] em português mas já adotamos completamente "\emph{cache}"...}
 
-Uma sequência de páginas, chamada de sequência de entrada ou sequência de pedidos, é fornecida e deve ser servida em ordem. Para que seja servida, todos os pedidos \(p\) devem ser satisfeitos, isso acontece quando (i) \(p\) está no cache; nesse casos, dizemos que houve um \emph{acerto de cache}; (ii) \(p\) não está no cache e uma página \(q\) (escolhida por um algoritmo de acordo com uma regra de substituição) é descartada do cache para que \(p\) entre; dizemos, nesse caso, que houve uma \emph{falha de cache}. O custo do algoritmo é a quantidade de falhas de cache, que buscamos minimizar em um dado contexto.
+Uma sequência de páginas, chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo escolhe a página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. 
 
 \subsection{Algoritmos determinísticos}
 
@@ -234,12 +239,14 @@ Cada política envolve um custo computacional distinto. Mas o foco é o custo do
 	  \centering
 	  \begin{tabular}{r c p{13cm}}
 	    \toprule
-            \(\boole{P}\) & \(\coloneqq\)& \(1\) se o predicado \(P\) for verdadeiro, e zero caso contrário \\
+            \(\ind{P}\) & \(\coloneqq\)& \(1\) se o predicado \(P\) for verdadeiro, e zero caso contrário \\
             \([n]\)
             & \(\coloneqq\)
             & \(\{1, \dotsc, n\}\) para cada \(n
               \in \Naturals\)\\
             \(\binom{X}{n}\) & \(\coloneqq\)& o conjunto de todos os subconjuntos de \(X\) de tamanho \(n\) para cada \(n \in [|X|]\) \\
+            \(X + y\) & \(\coloneqq\)& \(X \cup \{y\}\) dado que \(X\subseteq U\) e \(y \in U\) \\
+            \(X - y\) & \(\coloneqq\)& \(X \setminus \{y\}\) dado que \(X\subseteq U\) e \(y \in U\)\\
             \bottomrule
 	  \end{tabular}
 	\end{table}
@@ -320,46 +327,37 @@ Essa notação define naturalmente os algoritmos online. Assim, \(A (\emptyset) 
 
 \vredok{A definição a cima não é uma variável aleatória.}
 
-\begin{notation}
-
-
-\end{notation}
 
 \begin{definition}
   Sejam \(A\) um algoritmo online (aleatorizado\footnote{Caso não seja especificado, considera-se \(A\) aleatorizado. Qualquer 
   algoritmo determinístico é um algoritmo aleatorizado que toma um único valor com probabilidade 1}) e \(s \in [n]^*\). O \textbf{custo} do algoritmo \(A\) quando processa \(s\) é denotado por \(c(A, s)\) e é igual a quantidade de trocas de páginas, dada por 
 \vredok{Não use footnotes em modo matemática, parece que você está elevando o que está dentro a uma potência.}
-\vred{Qaul a definição de subtração de conjuntos?}
-\vgreen{Tava em dúvida se precisava de uma definição explícita, achei que provavelmente usaríamos isso só para deixar o texto mais limpo e que não faríamos contas com esses símbolos, mas parando pra pensar acho que vamos. Coloquei como uma \emph{notação} solta. Se acumular mais notações talvez valha a pena colocar tudo no começo numa seção de notação. Também to em dúvida sobre a numeração de teoremas/definições/notação: qual a lógica da sequência de números?}
+\vredok{Qaul a definição de subtração de conjuntos?}
+\vgreen{Ver seção de notação}
 \begin{equation}
-  c(A, s) = \sum_{t=1}^{|s|} \boole{\sigma_t \notin A(s_{1:t-1})}
+  c(A, s) = \sum_{t=1}^{|s|} \ind{\sigma_t \notin A(s_{1:t-1})}.
 \end{equation}
 
-Note que o primeiro da soma acima se reduz a \(\boole{\sigma_1 \notin [k]}\) pois \(s_{1:0} = \emptyseq\) e \(A(\emptyseq) = S_0 = [k]\) (veja \ref{seq_notation} e \ref{cache_ini}) .
+Note que o primeiro termo da soma acima se reduz a \(\ind{\sigma_1 \notin [k]}\) pois \(s_{1:0} = \emptyseq\) (\Cref{tbl:seq_notation}) e \(A(\emptyseq) = S_0 = [k]\) (\Cref{eq:cache_ini}) .
 
 \end{definition}
 
+\vblueok{Recomenda criar macros para comodandos como \(\textbf{OPT}\).}
 
-
-Ao longo do texto, por convenção, usaremos os símbolos "-" e "+" para denotar subtração e adição, respectivamente, de conjuntos ou de conjunto-elemento. (\textbf{\color{red}Victor}: Acabei de ver isso aqui. Isso merecia uma definição mais explicita e formal.)
-
-Note que \(c(A,s)\) iguala o número de falhas de cache quando \(A\) troca no máximo uma página a cada passo.
-
-\vblue{Recomenda criar macros para comodandos como \(\textbf{OPT}\).}
 \begin{definition}
-  Seja \(\mathcal{A}\) o conjunto de algoritmos determinísticos para o problema de caching. Denotamos por \(\textbf{OPT}(\sigma)\) o custo mínimo para uma sequência de páginas \(\sigma\).
-  \vred{Equações tem que ser pontuadas como se fossem a continuação da frase anterior.}
+  Seja \(\mathcal{A}\) o conjunto de algoritmos determinísticos para o problema de caching. Denotamos por \(\opt{\sigma}\) o custo mínimo para uma sequência de páginas \(\sigma\).
+  \vredok{Equações tem que ser pontuadas como se fossem a continuação da frase anterior.}
   \begin{equation}
     \textbf{OPT}(s) = \min_{A \in \mathcal{A}} c(A,\sigma).
   \end{equation}
 \end{definition}
 
 \vblue{Esse é um bom parágrafo de motivação. Acho que a redação pode melhorar um pouco, mas o conteudo dá uma motivação bem legal para o que veremos no futuro.}
-Foi dito antes que existe um algoritmo determinístico ótimo offline (política \textbf{FIF}) que incorre o custo mínimo. Conforme veremos nas próximas seções, nenhum algoritmo online pode igualar esse custo para toda entrada. De fato, somente um algoritmo online que pudesse advinhar o futuro (ou seja, conhecer toda a entrada a priori) poderia escolher a exata função que minimiza o custo para uma entrada. Mesmo que advinhasse corretamente para um caso, não poderia, evidentemente, acertar para todas outras instâncias. Por isso, imaginamos \(\textbf{OPT}(\sigma)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online e veremos em que medida são nas seções seguintes.
+Foi dito antes que existe um algoritmo determinístico ótimo offline (que implementa a política \textbf{FIF}) que incorre o custo mínimo. Conforme veremos nas próximas seções, nenhum algoritmo online pode igualar esse custo para toda entrada. De fato, somente um algoritmo online que pudesse advinhar o futuro (ou seja, conhecer toda a entrada a priori) poderia escolher a exata função que minimiza o custo para uma entrada. Mesmo que advinhasse corretamente para um caso, não poderia, evidentemente, acertar para todas outras instâncias. Por isso, imaginamos \(\textbf{OPT}(\sigma)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online e veremos em que medida são nas seções seguintes.
 
 \subsubsection{C-competitividade}
 
-\vblue{Adicionei contexto sobre \(\alpha\) na definicão}
+\vblueok{Adicionei contexto sobre \(\alpha\) na definicão}
 \begin{definition}
   Para \(\alpha > 0\), dizemos que um algoritmo \(A\) para o problema de caching é \(\alpha\)\textbf{-competitivo} se
 \begin{equation}
