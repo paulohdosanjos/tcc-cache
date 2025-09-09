@@ -1,0 +1,72 @@
+\usepackage[english,brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage[hyperref=true,%
+            backend=biber,%
+            language=english,%
+            doi=false,%
+            url=true,%
+            isbn=false,%
+            firstinits=true,% 
+            urldate=short,%
+            sortcites=true,%
+            style=authoryear,%
+            maxcitenames=2,%
+            maxbibnames=1000,%
+            arxiv=abs,%
+            related=true,%
+            backref=false,%
+            abbreviate=false,%
+            dateabbrev=false]{biblatex}
+\addbibresource{bib.bib}
+
+
+\usepackage[textsize=scriptsize]{todonotes}
+
+\usepackage{amssymb}
+\usepackage{bbm} % for blackboard 1, i.e., \mathbbm{1}
+\usepackage{bm}
+\usepackage{mathtools}          % already includes amsmath
+\usepackage{amsthm}
+\usepackage{mathrsfs}           % for \mathscr
+
+
+\usepackage{suffix}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{color}
+\usepackage{nicefrac}
+\usepackage[left=2.25cm,right=2.25cm]{geometry}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                      %%
+%%         CUSTOM PACKAGES              %%
+%%                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{notation}
+\usepackage{decorated}
+\usepackage{minimalnickstyle}
+\usepackage{theorems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,%
+            pdfauthor={Paulo Henrique Albuquerque dos Anjos de Souza},%
+            pdftitle={monografia},%
+            % colorlinks=true,%
+            % linkcolor=black,%
+            % citecolor=black,%
+            % urlcolor=black,%
+            hypertexnames=true,%
+            bookmarks=true]{hyperref}
+\usepackage{cleveref}
+\else
+\fi
