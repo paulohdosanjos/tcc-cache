@@ -18,6 +18,7 @@ A análise de algoritmos clássica foca na \emph{análise de pior caso}. Dado um
 
 O problema de \emph{caching} (ou de paginação) considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(n\). 
 \vgreen{Um detalhezinho: percebi que no texto eu tava usando as palavras "paginação" e "caching". Seria bom manter apenas uma, por conformidade. Você tem alguma preferência? Eu gostaria de usar a [palavra] em português mas já adotamos completamente "\emph{cache}"...}
+\vblue{Não tenho nenhuma preferência forte. Concordo que evitar estrangerismo é o ideal (o que nos penderia a usar paginação em geral), mas cache é um termo técnico já bem adotado, e não sei como escreveria ``acerto/falha de cache'' de outra maneira.}
 
 Uma sequência de páginas, chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo escolhe a página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. 
 
