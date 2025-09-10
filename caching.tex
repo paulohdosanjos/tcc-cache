@@ -1,3 +1,4 @@
+% LTeX: language=pt-BR
 \chapter{Introdução} 
 
 % Visão geral do TCC, organização, objetivos, etc...
@@ -18,7 +19,7 @@ A análise de algoritmos clássica foca na \emph{análise de pior caso}. Dado um
 
 O problema de \emph{caching} (ou de paginação) considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(n\). 
 \vgreen{Um detalhezinho: percebi que no texto eu tava usando as palavras "paginação" e "caching". Seria bom manter apenas uma, por conformidade. Você tem alguma preferência? Eu gostaria de usar a [palavra] em português mas já adotamos completamente "\emph{cache}"...}
-\vblue{Não tenho nenhuma preferência forte. Concordo que evitar estrangerismo é o ideal (o que nos penderia a usar paginação em geral), mas cache é um termo técnico já bem adotado, e não sei como escreveria ``acerto/falha de cache'' de outra maneira.}
+\vblue{(Resposta) Não tenho nenhuma preferência forte. Concordo que evitar estrangerismo é o ideal (o que nos penderia a usar paginação em geral), mas cache é um termo técnico já bem adotado, e não sei como escreveria ``acerto/falha de cache'' de outra maneira.}
 
 Uma sequência de páginas, chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo escolhe a página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. 
 
@@ -64,7 +65,8 @@ Cada política envolve um custo computacional distinto. Mas o foco é o custo do
 
 \subsubsection{Formalização inicial}
 
-\vgreen{Adicionei essa seção para não ter que ficar jogando notação básica no meio texto. Acha bom?. Claro ainda só o esqueleto, coloquei tudo mistudado, depois dá pra seccionar. OBS: roubei algumas coisas da sua tese. Revisa essas notações por favor.}
+\vgreen{\ok Adicionei essa seção para não ter que ficar jogando notação básica no meio texto. Acha bom?. Claro ainda só o esqueleto, coloquei tudo mistudado, depois dá pra seccionar. OBS: roubei algumas coisas da sua tese. Revisa essas notações por favor.}
+\vblue{(Resposta) Parece tudo OK!}
 \subsubsection{Notação básica}
 
 \bgroup
@@ -147,6 +149,7 @@ Sejam \(\Omega\) um conjunto de \(n\) elementos que chamaremos de páginas e \(\
 \end{definition}
 \vred{Talvez valha a pena discutir melhor porque \([k]\) sendo o cache inicial é razoavel. Poque não vazio? Porque não outro conjunto?}
 \vgreen{É uma escolha arbitrária já que não olharemos para as condições iniciais. É necessário explicar uma escolha sobre outra? De qualquer forma, tentei melhorar o texto. Veja se ficou satisfatório.}
+\vblue{(Resposta) A última frase que você colocou no parágrafo já é uma justaficativa, mesmo que curta, o que ajuda. Aqui o intuito é facilitar o entendimento. Você, por exemplo, já conhece o problema e sabe qual o intuito das definições, mas alguém aprendendo sobre o problema pela primeira vez pode ficar confuso. Nesse caso, imagino alguém pensando ``O algoritmo começar com \([k]\) me parece estrano, o algoritmo deveria começar do zero''. }
 \vblueok{``no tempo 1, no tempo 2''$\rightarrow$  ``após servidor o pedido 1, após servir o pedido 2'', não que o que é ``tempo $i$''. Talvez iteração ou passo seja melhor se você quiser introduzir essas noções.}
 \vred{``Nessa formulacão, \(A\) pode trocar quantas páginas quiser em cada tempo'' não sei o que você quer dizer com isso.}
 \vgreen{Ficou ruim mesmo. Quis dizer que o algoritmo poderia em tese "adiantar" algumas trocas e não necessariamente trocar páginas somente num \emph{cache miss} e também não necessariamente somente uma página. Eu coloquei essa formulação por que imaginei que usaria na demonstração da otimalidade do FIF. Vou tirar e usar a formulação mais simples de trocar uma página por vez. De qualquer forma, se quisermos mudar isso no futuro (o que acho improvável), dá pra voltar sem muito problema com a definição de custo anterior. Veja se ficou ok}
@@ -154,6 +157,7 @@ Essa notação define naturalmente os algoritmos online. Assim, \(A (\emptyset) 
 
 \vred{Eu vou colocar isso como vermelho porque acho que é de fato um problema, mas é uma discussão interessante. O output do algoritmo em sí tem que ser um conjunto de páginas, não uma distributição, certo? Talvez você queira que $A_r$ seja uma variável aleatória então? Notação probabilistica pode ficar meio bagunçada, mas independente da notação, acho que a definição atual não é ideal.}
 \vgreen{Sim, de fato, tá estranho. Quero que \(A_r\) seja uma variável aleatória sobre o espaço de algoritmos determinísticos. Nem vale a pena estender a definição como havia feito já que é uma definição mais por conformidade do qualquer outra coisa: esperaria-se que o leitor já soubesse a definição de algoritmo aleatorizado caso não a déssemos. Veja se está correta a definição [por extenso].}
+\vblue{(Resposta) A definição para nossos propósitos ta ótima. Definir essas coisas mais formalmente que isso (isto é, abrindo a caixa de pandora de o que é uma variável aleatória) certamente não vale a pena. Tentei isso no mestrado e sinto que falhei. Eu deixaria mais claro que é uma ``variável aleatória \emph{tomando valores} em \(\cA\)''. Acho que o problema antes era realmente definir como algo que  a gente não queria.}
 
 \begin{definition}
 
