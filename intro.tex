@@ -1,0 +1,45 @@
+\chapter{Introdução} 
+
+% Visão geral do TCC, organização, objetivos e resultados. Adicionar texto a medida que o texto avançar.
+
+% 1 - Análise de pior caso pessimista para algoritmos online. Análise competitiva
+% 2 - Para além da análise de pior caso. Entrada estruturada.
+% 3 - ML como preditor. Garantias, robustez
+% 4 - Problema de caching como estudo de caso. Resultados básicos sem predições
+% 5 - Caching tunado com predições dos artigos. Resultados e garantias.
+
+
+
+% Organização do trabalho
+
+O objetivo principal da análise matématica de algoritmos é informar sobre os melhores algoritmos para resolver um determinado problema computacional. A análise tradicional de algoritmos foca na \emph{análise de pior caso}, em que o \emph{perfil de desempenho} de um algoritmo é resumido pelo seu pior desempenho sobre qualquer entrada, implicitamente classificando como o melhor algoritmo aquele que garante o melhor desempenho em entradas difíceis. No entanto, em muitos problemas fundamentais, essa \emph{robustez} de pior caso é superficial senão impossível.  Por exemplo, no problema de ordenação de listas, sabe-se que o algoritmo \textsc{MergeSort} leva tempo \(\Theta(n \log n)\) para ordenar uma lista de tamanho \(n\), mesmo que a entrada já esteja ordenada, enquanto o tempo do \textsc{InsertionSort} é \(\Theta(n)\) para listas ordenadas mas \(\Theta(n^2)\) em geral: para qualquer par de algoritmos e uma métrica de desempenho, cada algoritmo vai se sair melhor que o outro em algumas entradas, então, a escolha por um algoritmo sobre outro é dependente do contexto. Esse tipo de análise se mostra particulamente falha no estudo dos \emph{algoritmos online}, que recebem e processam a entrada, uma sequência de \emph{pedidos}, em passos. Em um problema online, o algoritmo deve processar um pedido sem o conhecimento do próximo pedido. Em cada passo uma decisão é tomada dentre várias alternativas possíveis, cada uma com um custo associado e, portanto, a decisão tomada em um passo pode afetar os custos das alternativas de pedidos futuros. Em contrate, um \emph{algoritmo offline} recebe todos os pedidos a priori, antes de começar a processar. Na construção de algoritmos online típicos, não é proveitoso ter em mente uma robustez de pior caso: ela geralmente é pessimista pois as entradas difícies são relativamente raras. Considerando apenas as entradas difícies, em um dado problema, um algoritmo \(\mathcal{A}\) pode ser colocado na mesma prateleira que um outro algoritmo \(\mathcal{B}\) visivelmente menos eficaz na prática. 
+
+Diante da dificuldade intríseca na comparação de algoritmos, principalmente para problemas online, foi importante encontrar outras abordagens de análise mais sofisticadas, em que a superiodade de um algoritmo observada na prática seja capturada em um modelo mais abrangente e realista para as entradas. A partir daí, surgiu a motivação para uma filosofia "para além da análise de pior caso", introduzida principalmente por \textcite{Roughgarden19}, onde são formulados outros tipos de análise. 
+
+
+\section{Para além da análise de pior caso}
+
+Em contrate com a análise tradicional de pior caso, em que o desempenho de um algoritmo \(\mathcal{A}\) é medido com base em entradas patológicas, na \emph{análise competitiva}, o desempenho de \(\mathcal{A}\) é comparado com o desempenho do \emph{algoritmo offline} ótimo para o mesmo problema. Um algoritmo é \emph{competitivo} se sua \emph{razão de competitividade} ou simplesmente competitividade — a razão entre seu desempenho e o desempenho do algoritmo offline para uma determinada métrica — for limitada para qualquer entrada. Assim, a competitividade de um algoritmo está relacionada com o seu desempenho \emph{médio} e é, portanto, uma medida mais realista. 
+
+%Adicionar mais discussão sobre isso
+
+\section{Algoritmos aprimorados por aprendizado}
+
+Em resumo, então, algoritmos desenhados com base nos pior caso são sacrificam desempenho em entradas "fáceis" para terem garantias no pior caso. Em muitas problemas típicos, as entradas têm um estrutura conhecida, então mesmo a análise competitiva que olha o pior caso e contrasta com o algoritmo offline ótimo é muito pessimista para informar na prática. \emph{Learning Augumented Algorithms}, introduzidas por \textcite{Lykouris18}, são um framework "para além do pior caso" que levam em conta a estrutura da entrada e usam predições poderosas de modelos de machine learning para melhorar os algoritmos secos. Nesse framework, os algoritmos online clássicos são tunados com um \emph{oráclo} de aprendizado de maquina que prevê entradas futuras. Uma preocupação que surge sobre o oráclo é que os modelos de aprendizagem geralmente tem poucas garantis de pior caso. Então, com os algoritmos aumentados, buscamos obter o melhor dos dois mundos: um algoritmo que desempenha bem no caso otimista, onde a predição tem erro baixo e se mantém robusto no sentido do pior caso tradicional, onde a predição pode ser arbitrariamente ruim. 
+
+%Exemplo busca binária
+
+%Exeplo ski rental
+
+%Robustez e consistência
+
+\section{O problema de caching como estudo de caso}
+
+O problema de \emph{caching} (ou de paginação) considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(n\). 
+\vgreen{Um detalhezinho: percebi que no texto eu tava usando as palavras "paginação" e "caching". Seria bom manter apenas uma, por conformidade. Você tem alguma preferência? Eu gostaria de usar a [palavra] em português mas já adotamos completamente "\emph{cache}"...}
+
+Uma sequência de páginas, chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo escolhe a página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. 
+
+% Literatura de caching com predições
+
+% resultados de competitividade para PredctiveMarker e PFIF
