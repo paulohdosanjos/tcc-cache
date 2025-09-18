@@ -1,6 +1,9 @@
 % LTeX: language=pt-br
 \documentclass[11pt,reqno, a4paper]{report}
 
+\setlength{\parskip}{1em}
+\setlength{\parindent}{14pt}
+
 \usepackage{packages}
 
 \include{macros}
@@ -12,6 +15,7 @@
 \selectlanguage{brazil}
 
 \begin{abstract}
+Na análise de algoritmos clássicos, frequentemente usa-se a análise de pior caso para se chegar em garantias teóricas fortes de desempenho, independentes da entrada. No entanto, em geral, o pior caso aparece com pouca frequência na prática - sacrificamos uma possível melhora no algoritmo por garantias téoricas que não chegam a ser "alcançadas". Mais normalmente, os dados de entrada possuem algum tipo de estrutura que pode ser explorada. Uma predição sobre essa estrutura, que pode ser gerada, por exemplo, por um modelo de aprendizado de máquina, pode entrar em jogo no algoritmo, melhorando o desempenho sem prescindir de garantias téoricas, possivelmente mais fracas porém mais realistas. Essa é a premissa básica da recém-nascida área de algoritmos com predições. O objetivo desse estudo é estudar as principais ideias e resultados dessa área, usando o problema de caching (paginação online). 
 \end{abstract}
 
 \tableofcontents
