@@ -1,59 +1,9 @@
 % LTeX: language=pt-BR
-\chapter{O problema de caching tradicional}
+\chapter{Problema de caching tradicional}
 
-O problema de \emph{caching} (ou de paginação) considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(n\). 
-\vgreen{Um detalhezinho: percebi que no texto eu tava usando as palavras "paginação" e "caching". Seria bom manter apenas uma, por conformidade. Você tem alguma preferência? Eu gostaria de usar a [palavra] em português mas já adotamos completamente "\emph{cache}"...}
-\vblue{(Resposta) Não tenho nenhuma preferência forte. Concordo que evitar estrangerismo é o ideal (o que nos penderia a usar paginação em geral), mas cache é um termo técnico já bem adotado, e não sei como escreveria ``acerto/falha de cache'' de outra maneira.}
+O problema de \emph{caching} considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(m \gg k\). Uma sequência de itens (páginas), chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. Antes de entrarmos nos modelos de predições, estudaremos o problema tradicional, ou seja, sem predições. 
 
-Uma sequência de páginas, chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo escolhe a página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache.
-
-\section{Preliminares}
-
-\subsection{Notação}
-\vred{Essa seção está um pouco confusa. Acho que a descrição ``informal'' do problema esta misturada com a descrição formal, e a descrição formal está em uma prosa densa difícil de interpretar. Não saber onde uma acaba e a outra começa pode confundir o leitor. Acho que vale a pena ter uma descrição informal inicial e depois uma descrição formal do problema teórico (idealizado). 
-
-\textbf{Um exemplo concreto}. ``Uma sequência de páginas, chamada de sequência de entrada ou sequência de pedidos, é fornecida e deve ser servida em ordem.'' Você explica depois o que significa uma página ser \emph{servida}, mas você já usa nessa frase e é dificil entender o que está acontecendo (e meio que nos induz a ficar indo e voltando no texto, e esse não é o único caso). Mesmo na frase seguinte, onde eu como leitor tendo entender o que você quis dizer com servida, você introduz vários conceitos em uma frase só: a sequência ser \emph{servida} significa que cada página é \emph{satisfeita}, o que por sua fez significa duas coisas, cada uma com um nome diferente (\emph{acerto} e \emph{falha do cache}, e ainda fala de um \emph{algoritmo} com uma \emph{regra de substituição}. Não sei de todas essas coisas o que era pra ser uma definição formal e o que é só uma ideia. Para efeito de comparação, mesmo a descrição no livre de \textcite{MotwaniR95} (que é bem verbosa na minha opinião) faz uma separação um pouco mais clara e introduz os conceitos aos poucos. Ver como os diferentes livros e artigos discutem o problema podem ajudar na escrita dessa seção. Talvez o exemplo do \textcite{Wei20} seja um bom exemplo (apesar de a descrição informal dele jas ser mais formal do que eu esperaria nessa parte do texto).
-}
-
-
-\subsection{Algoritmos determinísticos}
-
-\subsubsection{Algoritmos online vs offline e análise competitiva}
-\vblue{Essa discussão já começa a entrar mais nos detalhes dos problemas. Talvez ter uma descrição mais formal antes ajude no andamento do texto.}
-\vred{``Em particular'' tem que ser precedido de uma discussão geral que não existe.} 
-Em particular, estamos interessados no cenário online, onde os pedidos são servidos um por vez. Um algoritmo que resolve o problema, então, deve tomar decisões sequencialmente sem conhecimento dos pedidos futuros. 
-
-É simples imaginar algum algoritmo que resolva o problema de caching descrito acima. Por exemplo, pode-se escolher aleatoriamente uma página para sair do cache numa falha. Naturalmente, queremos analisar esses possíveis algoritmos e comparar seus desempenhos. Na análise de algoritmos clássica, é comum medir o desempenho do algoritmo pela análise de pior caso. No cenário online, é pouco proveitoso usar essa métrica: é fácil ver que é sempre possível encontrar uma entrada patológica que incorra um custo ilimitado para qualquer algoritmo determinístico; isso torna inútil a comparação de algoritmos baseada nesse pior caso. Portanto, usamos uma outra forma de analisar e comparar os algoritmos online. Essa forma alternativa é chamada de \emph{análise competitiva}. 
-\vblue{Eu sei que o seu intuito no seguinte trecho ainda é uma discussão informal, mas a redação me parece meio densa por você querer evitar o uso de notação matemática (e.g., você discute o \emph{desempenho}, depois fala da \emph{razão dos custos} e \emph{a entrada que resulta na maior discrepância.} Acho que se o que vier antes melhorar talvez você possa manter assim, mas ainda me parece uma discussão densa que poderia ser simplificada com um pouco de notação.}
-De forma simplificada, na análise competitiva, o desempenho de um algoritmo é comparado com o desempenho um algoritmo ótimo quando processam a pior entrada (a entrada que resulta na maior discrepância). A razão entre os custos é denominada de competitividade do algoritmo e é usada para comparar diferentes algoritmos online. Pela descrição de competitividade acima, os melhores algoritmos têm competitivade baixa, mais próxima possível de 1. Intuitivamente, é como se cada sequência de entrada tivesse um custo intrínseco, que seria o custo incorrido pelo algoritmo ótimo.
-
-Inicialmente, olhamos para algoritmos determinísticos, isto é, que não possuem um gerador de números aleatórios para auxiliar suas decisões. A competitividade é dada comparando seu custo com o custo de um algoritmo offline ótimo. Esse algoritmo não é online e, portanto, possui conhecimento de toda a sequência de pedidos a priori. Cada algoritmo é descrito pela sua política que determina qual página será trocada numa falha de cache.
-
-\subsubsection{Políticas clássicas}
-
-\vred{Essa discussão com certeza merecia ser mais bem formalizada. A descrição está muito informal e densa. Você diz que algoritmos onlines devem tomar decisão sem conhecimento dos pedidos futuros, mas não sei o que é exatamente o input/output do algoritmo, qual a diferença de um algoritmo pra uma política, etc. Se seu objetivo for uma descrição mais alto nível e informal, tudo bem mais tem que melhorar a redação para deixar claro isso e deixar mesmo a discussão mais informal menos confusa. Nesse último caso, se a descrição informal do problema lá em cima ficar um pouco mais precisa já vai ajudar bastante.}
-Vejamos algumas políticas (isso é, regra de substituição de páginas) clássicas. Uma regra simples intuitiva é que o cache não deveria descartar páginas que serão requisitadas no futuro próximo. Um algoritmo online deve tomar uma decisão sem conhecimento dos pedidos futuros. 
-
-\begin{itemize}
-  \item \textit{Least Recently Used} (\textbf{LRU}): descarta a página no cache cujo pedido mais recente ocorreu mais no passado. \\
-
-  \item \textit{First-in, First-out} (\textbf{FIFO}): descarta a página que está há mais tempo no cache. \\
-
-  \item \textit{Least Frequently Used} (\textbf{LFU}): descarta a página no cache que foi menos requisitada no passado.
-\end{itemize}
-
-Cada política envolve um custo computacional distinto. Mas o foco é o custo do problema de caching, isto é, a quantidade de falhas de cache numa sequência de pedidos. Voltaremos para essas políticas clássicas depois.
-
-\subsubsection{Política ótima}
-
-\vred{Use biblatex para citações. Mudei o estilo para authoryear para se encaixar com o que você tinha escrito, e mudei a citação abaixo como exemplo.}
-\textcite{Belady66} propôs um simples algoritmo ótimo para o problema de caching. A política do algoritmo de Belady é descartar a página que permanecerá sem pedidos pelo maior tempo no futuro. Essa política é chamada de \textit{Furthest-in-the-Future} (\textbf{FIF}). Observe que essa política pressupõe o conhecimento de toda a entrada a priori; o algoritmo é dito \textbf{offline}. Evidentemente, não é possível implementar essa política explicitamente num cenário online. Mesmo assim, ela será útil como metrica de comparação para algorimos online. A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante.
-
-\subsubsection{Formalização inicial}
-
-\vgreen{\ok Adicionei essa seção para não ter que ficar jogando notação básica no meio texto. Acha bom?. Claro ainda só o esqueleto, coloquei tudo mistudado, depois dá pra seccionar. OBS: roubei algumas coisas da sua tese. Revisa essas notações por favor.}
-\vblue{(Resposta) Parece tudo OK!}
-\subsubsection{Notação básica}
+\section{Notação}
 
 \bgroup
 	\renewcommand{\arraystretch}{1.2}
@@ -107,175 +57,165 @@ Cada política envolve um custo computacional distinto. Mas o foco é o custo do
 	  \end{tabular}
 	\end{table}
 \egroup
-\vred{Essa seção está um pouco confusa. Acho que a descrição ``informal'' do problema esta misturada com a descrição formal, e a descrição formal está em uma prosa densa difícil de interpretar. Não saber onde uma acaba e a outra começa pode confundir o leitor. Acho que vale a pena ter uma descrição informal inicial e depois uma descrição formal do problema teórico (idealizado). 
-
-\textbf{Um exemplo concreto}. ``Uma sequência de páginas, chamada de sequência de entrada ou sequência de pedidos, é fornecida e deve ser servida em ordem.'' Você explica depois o que significa uma página ser \emph{servida}, mas você já usa nessa frase e é dificil entender o que está acontecendo (e meio que nos induz a ficar indo e voltando no texto, e esse não é o único caso). Mesmo na frase seguinte, onde eu como leitor tendo entender o que você quis dizer com servida, você introduz vários conceitos em uma frase só: a sequência ser \emph{servida} significa que cada página é \emph{satisfeita}, o que por sua fez significa duas coisas, cada uma com um nome diferente (\emph{acerto} e \emph{falha do cache}, e ainda fala de um \emph{algoritmo} com uma \emph{regra de substituição}. Não sei de todas essas coisas o que era pra ser uma definição formal e o que é só uma ideia. Para efeito de comparação, mesmo a descrição no livre de \textcite{MotwaniR95} (que é bem verbosa na minha opinião) faz uma separação um pouco mais clara e introduz os conceitos aos poucos. Ver como os diferentes livros e artigos discutem o problema podem ajudar na escrita dessa seção. Talvez o exemplo do \textcite{Wei20} seja um bom exemplo (apesar de a descrição informal dele jas ser mais formal do que eu esperaria nessa parte do texto).
-}
-
-
-\vblue{Essa discussão já começa a entrar mais nos detalhes dos problemas. Talvez ter uma descrição mais formal antes ajude no andamento do texto.}
-\vred{``Em particular'' tem que ser precedido de uma discussão geral que não existe.} 
-Em particular, estamos interessados no cenário online, onde os pedidos são servidos um por vez. Um algoritmo que resolve o problema, então, deve tomar decisões sequencialmente sem conhecimento dos pedidos futuros. 
-
-\vblue{Eu sei que o seu intuito no seguinte trecho ainda é uma discussão informal, mas a redação me parece meio densa por você querer evitar o uso de notação matemática (e.g., você discute o \emph{desempenho}, depois fala da \emph{razão dos custos} e \emph{a entrada que resulta na maior discrepância.} Acho que se o que vier antes melhorar talvez você possa manter assim, mas ainda me parece uma discussão densa que poderia ser simplificada com um pouco de notação.}
-De forma simplificada, na análise competitiva, o desempenho de um algoritmo é comparado com o desempenho um algoritmo ótimo quando processam a pior entrada (a entrada que resulta na maior discrepância). A razão entre os custos é denominada de competitividade do algoritmo e é usada para comparar diferentes algoritmos online. Pela descrição de competitividade acima, os melhores algoritmos têm competitivade baixa, mais próxima possível de 1. Intuitivamente, é como se cada sequência de entrada tivesse um custo intrínseco, que seria o custo incorrido pelo algoritmo ótimo.
 
 \section{Preliminares}
 
-Inicialmente, olhamos para algoritmos determinísticos, isto é, que não possuem um gerador de números aleatórios para auxiliar suas decisões. A competitividade é dada comparando seu custo com o custo de um algoritmo offline ótimo. Esse algoritmo não é online e, portanto, possui conhecimento de toda a sequência de pedidos a priori. Cada algoritmo é descrito pela sua política que determina qual página será trocada numa falha de cache.
+O problema \(\textsc{Caching}(n,k)\) denota o problema de caching para um cache de tamanho \(k\) e sequências de pedidos de tamanho \(n\). É dado um universo \(\Zcal\) (\(|\Zcal| \gg k\)) e elementos \(z_i \in \Zcal\) chegam um por vez em passos \(i \in [n]\). O contéudo do cache imediatamente após processar o pedido \(i\) é \(C_i \subseteq \Zcal\). A entrada é \(z = \angb{z_1, \dotsc, z_n}\) e o conteúdo inicial do cache \(C_0\). Como estamos interessados no comportamento assintótico, ou seja, em entradas grandes, omitiremos \(C_0\) da entrada em geral e também supomos que sempre começa cheio (\(|C_0| = k\)), o conteúdo específico não importa. Um algoritmo \(\Acal\) para o problema de caching, então, deve escolher no passo \(i\) um elemento \(e_i\) para descartar do cache e substituir pelo elemento \(z_i\) em uma falha de cache, isto é, quando \(z_i \notin C_{i-1}\). A saída do problema é a quantidade total de falhas de cache. Os conjuntos \(C_i\) ou, alternativamente, os elementos escolhidos para descarte \(e_i\); em um acerto de cache \(e_i = \emptyset\).
 
-\vred{Essa discussão com certeza merecia ser mais bem formalizada. A descrição está muito informal e densa. Você diz que algoritmos onlines devem tomar decisão sem conhecimento dos pedidos futuros, mas não sei o que é exatamente o input/output do algoritmo, qual a diferença de um algoritmo pra uma política, etc. Se seu objetivo for uma descrição mais alto nível e informal, tudo bem mais tem que melhorar a redação para deixar claro isso e deixar mesmo a discussão mais informal menos confusa. Nesse último caso, se a descrição informal do problema lá em cima ficar um pouco mais precisa já vai ajudar bastante.}
-Vejamos algumas políticas (isso é, regra de substituição de páginas) clássicas. Uma regra simples intuitiva é que o cache não deveria descartar páginas que serão requisitadas no futuro próximo. Um algoritmo online deve tomar uma decisão sem conhecimento dos pedidos futuros. 
+\subsection{Discussão sobre o tamanho da entrada}
 
-\begin{itemize}
-  \item \textit{Least Recently Used} (\textbf{LRU}): descarta a página no cache cujo pedido mais recente ocorreu mais no passado. \\
+comportamento assintótico, condições iniciais, regret time analysis, tamanho da entrada. https://www.cs.cmu.edu/~sleator/papers/amortized-efficiency.pdf. Constante aditiva.
 
-  \item \textit{First-in, First-out} (\textbf{FIFO}): descarta a página que está há mais tempo no cache. \\
-
-  \item \textit{Least Frequently Used} (\textbf{LFU}): descarta a página no cache que foi menos requisitada no passado.
-\end{itemize}
-
-Cada política envolve um custo computacional distinto. Mas o foco é o custo do problema de caching, isto é, a quantidade de falhas de cache numa sequência de pedidos. Voltaremos para essas políticas clássicas depois.
-
-\vred{Use biblatex para citações. Mudei o estilo para authoryear para se encaixar com o que você tinha escrito, e mudei a citação abaixo como exemplo.}
-\textcite{Belady66} propôs um simples algoritmo ótimo para o problema de caching. A política do algoritmo de Belady é descartar a página que permanecerá sem pedidos pelo maior tempo no futuro. Essa política é chamada de \textit{Furthest-in-the-Future} (\textbf{FIF}). Observe que essa política pressupõe o conhecimento de toda a entrada a priori; o algoritmo é dito \textbf{offline}. Evidentemente, não é possível implementar essa política explicitamente num cenário online. Mesmo assim, ela será útil como metrica de comparação para algorimos online. A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante.
-
-\vgreen{Adicionei essa seção para não ter que ficar jogando notação básica no meio texto. Acha bom?. Claro ainda só o esqueleto, coloquei tudo mistudado, depois dá pra seccionar. OBS: roubei algumas coisas da sua tese. Revisa essas notações por favor.}
-\subsubsection{Notação básica}
-
-\vredok{``Seja $\Omega$ um conjunto de páginas (...)''. Quando você diz ``Seja $X$ um $Y$'' eu espero saber o que é $Y$. Nesse caso, o melhor seria dizer ``Seja $\Omega$ um conjunto de \(n\) elementos que chamaremos de \emph{páginas}.''}
-\vredok{O que, \emph{exatamente}, você quer dizer com uma página ser \emph{numerada}?}
-\vredok{``$\sigma_t \subset [n]$ uma sequência'' você escreveu em matemática um subconjunto e disse que é uma sequência.}
-\vredok{\(X^*\) para um conjunto \(X\) não foi definido.}
-\vblueok{Aqui seria legal dar o contexto de que \(\sigma\) é a sequência de pedidos de páginas que o algoritmo vai precisar ``servir'' que discutimos mais a cima para não ficar tão seco.}
-Sejam \(\Omega\) um conjunto de \(n\) elementos que chamaremos de páginas e \(\sigma_t \in [n] \) uma sequência de páginas, que são os pedidos que o algoritmo irá servir e seja \(T = |\sigma|\).
-
-\section{Algoritmos determinísticos}
+A partir deste ponto, trataremos sempre da instância \textsc{Caching(n,k)} a menos que se fale o contrário, sem necessidade de repetir que o cache tem tamanho \(k\) e a entrada z possui tamanho \(n\). Seja \(\Acal\) um algoritmo online para o problema de caching. Inicialmente, consideramos os algoritmos online determinísticos, que não possuem um gerador de números aleatórios para auxiliar suas decisões. Conforme veremos adiante, isso representa menos poder ao algoritmo: os algoritmos aleatorizados conseguem atingir um desemepenho muito melhor na teoria. Assim, um algoritmo online \(\Acal\) para \(\textsc{Caching}(n,k)\) é determinado pela estratégia que decide os elementos \(e_i\) a serem descartados após uma falha de cache. A redução das falhas de cache depende, em grande parte, de manter no cache as páginas que serão requisitadas em breve. Como o algoritmo é online, deve tomar suas decisões sem conhecimento dos pedidos futuros.
 
 \begin{definition}
-  Um \textbf{algoritmo determinístico} (online\footnote{Caso não seja especificado, considera-se o algoritmo online.}) para o problema de caching\footnote{Sempre estaremos nos referindo ao problema de caching com \emph{cache} de tamanho \(k\) e \(n\) elementos} é uma função \(A : [n]^{*} \to \binom{[n]}{k}\). Para uma sequência de pedidos de $t$ páginas \(s \in [n]^t\), \(S_t \coloneqq A(s)\) é o conteúdo do cache após servir os pedidos de \(s\) em ordem. O algoritmo \(A\) satisfaz a sequência \(\sigma\) se
-\vredok{Não coloque espaço entre os math environments e o texto que vem antes, se não o env fica em um parágrafo novo.}
-\begin{equation}
-  \label{eq:cache_ini}
-  A(\emptyset)  = S_0 = [k] \quad \textit{Estado inicial do cache} \\
- \end{equation}
-
- \begin{equation}
-  \sigma_t \in A(\sigma_{1:t}) = S_t, \quad \forall \ t \in [T] \quad \textit{Condição do cache}
-\end{equation}
-
-\end{definition}
-\vred{Talvez valha a pena discutir melhor porque \([k]\) sendo o cache inicial é razoavel. Poque não vazio? Porque não outro conjunto?}
-\vgreen{É uma escolha arbitrária já que não olharemos para as condições iniciais. É necessário explicar uma escolha sobre outra? De qualquer forma, tentei melhorar o texto. Veja se ficou satisfatório.}
-\vblue{(Resposta) A última frase que você colocou no parágrafo já é uma justaficativa, mesmo que curta, o que ajuda. Aqui o intuito é facilitar o entendimento. Você, por exemplo, já conhece o problema e sabe qual o intuito das definições, mas alguém aprendendo sobre o problema pela primeira vez pode ficar confuso. Nesse caso, imagino alguém pensando ``O algoritmo começar com \([k]\) me parece estrano, o algoritmo deveria começar do zero''. }
-\vblueok{``no tempo 1, no tempo 2''$\rightarrow$  ``após servidor o pedido 1, após servir o pedido 2'', não que o que é ``tempo $i$''. Talvez iteração ou passo seja melhor se você quiser introduzir essas noções.}
-\vred{``Nessa formulacão, \(A\) pode trocar quantas páginas quiser em cada tempo'' não sei o que você quer dizer com isso.}
-\vgreen{Ficou ruim mesmo. Quis dizer que o algoritmo poderia em tese "adiantar" algumas trocas e não necessariamente trocar páginas somente num \emph{cache miss} e também não necessariamente somente uma página. Eu coloquei essa formulação por que imaginei que usaria na demonstração da otimalidade do FIF. Vou tirar e usar a formulação mais simples de trocar uma página por vez. De qualquer forma, se quisermos mudar isso no futuro (o que acho improvável), dá pra voltar sem muito problema com a definição de custo anterior. Veja se ficou ok}
-Essa notação define naturalmente os algoritmos online. Assim, \(A (\emptyset) = [k]\), \(A((\sigma_1)) = S_1\), \(A((\sigma_1, \sigma_2)) = S_2\) correspondem aos conteúdos do cache no ínicio, após servir o primeiro pedido e após servir o segundo pedido, respectivamente; em geral, \(S_t = A(\sigma_{1:t})\) correponde ao conteúdo do cache imediatamente após \(A\) servir o pedido do tempo \(t\). Escolhemos arbitrariamente (não estamos interessados nas condições iniciais e sim no comportamento assintótico do algoritmo) o estado inicial do cache igual ao conjunto das \(k\) primeiras páginas.
-
-\vred{Eu vou colocar isso como vermelho porque acho que é de fato um problema, mas é uma discussão interessante. O output do algoritmo em sí tem que ser um conjunto de páginas, não uma distributição, certo? Talvez você queira que $A_r$ seja uma variável aleatória então? Notação probabilistica pode ficar meio bagunçada, mas independente da notação, acho que a definição atual não é ideal.}
-\vgreen{Sim, de fato, tá estranho. Quero que \(A_r\) seja uma variável aleatória sobre o espaço de algoritmos determinísticos. Nem vale a pena estender a definição como havia feito já que é uma definição mais por conformidade do qualquer outra coisa: esperaria-se que o leitor já soubesse a definição de algoritmo aleatorizado caso não a déssemos. Veja se está correta a definição [por extenso].}
-\vblue{(Resposta) A definição para nossos propósitos ta ótima. Definir essas coisas mais formalmente que isso (isto é, abrindo a caixa de pandora de o que é uma variável aleatória) certamente não vale a pena. Tentei isso no mestrado e sinto que falhei. Eu deixaria mais claro que é uma ``variável aleatória \emph{tomando valores} em \(\cA\)''. Acho que o problema antes era realmente definir como algo que  a gente não queria.}
-
-\begin{definition}
-
-  Seja \(\mathcal{A}\) o conjunto de algoritmos determinísticos. Um \textbf{algoritmo aleatorizado} \(A_r\) para o problema de caching é uma variável aleatória sobre \(\mathcal{A}\). 
-
-\end{definition}
-
-\vredok{A definição a cima não é uma variável aleatória.}
-
-
-\begin{definition}
-  Sejam \(A\) um algoritmo online (aleatorizado\footnote{Caso não seja especificado, considera-se \(A\) aleatorizado. Qualquer 
-  algoritmo determinístico é um algoritmo aleatorizado que toma um único valor com probabilidade 1}) e \(s \in [n]^*\). O \textbf{custo} do algoritmo \(A\) quando processa \(s\) é denotado por \(c(A, s)\) e é igual a quantidade de falhas de cache nessa sequência, dada por 
-\vredok{Não use footnotes em modo matemática, parece que você está elevando o que está dentro a uma potência.}
-\vredok{Qaul a definição de subtração de conjuntos?}
-\vgreen{Ver seção de notação}
-\begin{equation}
-  c(A, s) = \sum_{t=1}^{|s|} \ind{\sigma_t \notin A(s_{1:t-1})}.
-\end{equation}
-
-Note que o primeiro termo da soma acima se reduz a \(\ind{\sigma_1 \notin [k]}\) pois \(s_{1:0} = \emptyseq\) (\Cref{tbl:seq_notation}) e \(A(\emptyseq) = S_0 = [k]\) (\Cref{eq:cache_ini}) .
-
-\end{definition}
-
-\vblueok{Recomenda criar macros para comodandos como \(\textbf{OPT}\).}
-
-\begin{definition}
-  Seja \(\mathcal{A}\) o conjunto de algoritmos determinísticos para o problema de caching. Denotamos por \(\opt{\sigma}\) o custo mínimo para uma sequência de páginas \(\sigma\).
-  \vredok{Equações tem que ser pontuadas como se fossem a continuação da frase anterior.}
+  O custo \(\Acal(z)\) quando \(\Acal\) processa a entrada \(z\) é a quantidade total de falhas de cache,
   \begin{equation}
-    \textbf{OPT}(s) = \min_{A \in \mathcal{A}} c(A,\sigma).
+    \Acal(z) = \sum_{i=1}^{|n|} \ind{z_i \notin C_{i-1}}.
   \end{equation}
 \end{definition}
 
-\vblue{Esse é um bom parágrafo de motivação. Acho que a redação pode melhorar um pouco, mas o conteudo dá uma motivação bem legal para o que veremos no futuro.}
-Foi dito antes que existe um algoritmo determinístico ótimo offline (que implementa a política \textbf{FIF}) que incorre o custo mínimo. Conforme veremos nas próximas seções, nenhum algoritmo online pode igualar esse custo para toda entrada. De fato, somente um algoritmo online que pudesse advinhar o futuro (ou seja, conhecer toda a entrada a priori) poderia escolher a exata função que minimiza o custo para uma entrada. Mesmo que advinhasse corretamente para um caso, não poderia, evidentemente, acertar para todas outras instâncias. Por isso, imaginamos \(\textbf{OPT}(\sigma)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online e veremos em que medida são nas seções seguintes.
+O esqueleto de um algoritmo para o problema de caching é, portanto,
+
+\begin{algorithm}
+  \caption{Esqueleto de \(\mathbf{A}(C_0, z)\)}
+  \label{algo:LRU}
+  \begin{algorithmic}
+    \Require\\
+    \begin{enumerate}[label=(\roman*),ref=\roman*]
+    \item Sequência \(z\) de tamanaho \(n\) 
+    \item Conteúdo do cache inicial \(C_0\)
+    \end{enumerate}
+
+    %
+    \Ensure Número total de falhas de cache \(\mathbf{A}(z)\).
+    % 
+    \State \(c \gets 0\)
+    \For{\(i = 1\)~to~\(n\)}
+    %
+    \If {\(z_i \notin C_{i-1}\) }
+      \State escolhe \(e_i \in C_{i-1}\) para descartar
+      \State \(C_i \gets C_{i-1} \setminus \{e_i\}\cup \{z_i\} \)
+      \State \(c \gets c + 1\)
+    \Else
+      \State \(C_i \gets C_{i-1}\)
+    \EndIf
+    \EndFor
+    \State \Return \(c\)
+  \end{algorithmic}
+\end{algorithm}
+
+A escolha de \(e_i\) pode ser feita de forma determística ou não. 
+
+\begin{definition}
+  Seja \(\mathbb{A}\) o conjunto de algoritmos determinísticos. Um \textbf{algoritmo aleatorizado} \(A_r\) para o problema de caching é uma variável aleatória sobre \(\mathbb{A}\). 
+\end{definition}
+
+\subsection{Algoritmo offline ótimo}
+
+\begin{definition}
+  Seja \(\Acal\) o conjunto de algoritmos determinísticos para o problema de caching. Denotamos por \(\opt(z)\) o custo mínimo para uma sequência de páginas \(z\),
+  \vredok{Equações tem que ser pontuadas como se fossem a continuação da frase anterior.}
+  \begin{equation}
+    \opt(z) = \min_{\Acal \in \mathbb{A}} \Acal(z).
+  \end{equation}
+\end{definition}
+
+\textcite{Belady66} propôs um simples algoritmo offline, isto é, que tem acesso a toda entrada \(z\) a priori, ótimo para o problema de caching. A estratégia do algoritmo de Belady, chamada \textit{Furthest-in-the-Future} (abreviada por \textbf{FIF}), escolhe o elemento \(e_i\) que permanecerá sem pedidos pelo maior tempo no futuro. Ele demonstrou que tal estratégia tem custo \(\opt(z)\) para qualquer entrada \(z\). A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante no final da seção. Evidentemente, não é possível implementar explicitamente o algoritmo em um cenário online, mesmo assim, seu custo servirá como base de comparação para algorimos online, que é o cerne da \textbf{análise competitiva}.
 
 \subsection{C-competitividade}
 
-\vblueok{Adicionei contexto sobre \(\alpha\) na definicão}
 \begin{definition}
-  Para \(\alpha > 0\), dizemos que um algoritmo \(A\) para o problema de caching é \(\alpha\)\textbf{-competitivo} se
+  \label{def:comp}
+  Para \(\alpha > 0\), dizemos que um algoritmo \(\Acal\) para o problema de caching é \(\alpha\)\textbf{-competitivo} se
 \begin{equation}
-  \mathbb{E}[c(A,s)] \le \alpha \bold{OPT}(s) \quad \forall s \in [n]^*
+  \mathbb{E}[\Acal(z)] \le \alpha \opt(z), \quad \forall z \in [\Zcal]^n.
 \end{equation}
 
-Além disso, o \textbf{coeficiente de competitividade} de \(A\), denotado \(C_A\), é o ínfimo de \(\alpha\) tal que \(A\) é \(\alpha\)-competitivo.
-
+Evidentemente, para algoritmos determinísticos, a esperança pode ser dispensada. Além disso, o \textbf{coeficiente de competitividade}, ou simplesmente competitividade, de \(\Acal\), denotado \(C_{\Acal}\), é o ínfimo de \(\alpha\) tal que \(\Acal\) é \(\alpha\)-competitivo,
 \end{definition}
 
- Caracterizamos assim a análise competitiva, isto é, comparar algoritmos com base nos seus coeficientes de competitividade. 
+Caracterizamos assim a análise competitiva, em que o o desemepenho de um algoritmo online é determinado pela razão entre seu custo e o custo do algoritmo offline\footnote{A partir daqui dispensaremos a palavra "ótimo": sempre que aparar algoritmo offline será o ótimo} no pior caso. Determinando a competitividade de diferentes algoritmos, temos uma base para comparar as estratégias online. 
 
-\vred{O que é \(C_{LRU}\), \(C_{FIFO}\) e \(C_{LFU}\)? Você nunca definiu. Além disso, a notação deveria ser algo tipo \(C_{\mathsf{LRU}}\). (Desculpa, lembrei agora que era pra ter parado até sec 2.1)}
-\vblue{Eu pessoalmente não gosto dessas perguntas numeradas, prefiro um parágrafo contando uma história e motivando o problema. Mas se você quiser manter, tudo bem, mas ainda assim falta motivação.}
-\begin{question}
-  Quais os valores de \(C_{LRU}\), \(C_{FIFO}\) e \(C_{LFU}\) ?
-\end{question}
+\subsection{Algortimos determinísticos clássicos}
 
-Antes de responder essa pergunta, provemos um teorema geral, que nos dá uma cota inferior para o coeficiente de competitividade de algoritmos determinísticos.
+Visanto incorrer um custo baixo, algumas estratégias clássicas são formuladas e os algoritmos correspondentes.  
+
+No algortimo \(\lru\) (\textit{Least Recently Used}), \(e_i\) é o elemento no cache cujo último pedido é mais antigo como um indicativo que não aparecerá tão breve, pois há muito tempo não foi requisitada.
+
+No algortimo \(\mathbf{A_{FIFO}}\) (\textit{First-in, First-out}), \(e_i\) é o elemento que está há mais tempo no cache. 
+
+No algortimo \(\mathbf{A_{LFU}}\) (\textit{Least Frequently Used}) \(e_i\) é o elemento no cache que foi menos requisitada no passado.
+
+Aqui, não analisamos os detalhes das implementações e as restrições de tempo e espaço desses algoritmos: nosso foco é o custo do algoritmo, isto é, a quantidade total de falhas de cache, que independente da exata implementação de cada estratégia nos algoritmos.
+
+Foi dito que existe um algoritmo determinístico ótimo offline (que implementa a política \textbf{FIF}) que incorre o custo mínimo para uma entrada \(z\). A dúvida natural que surje é quão próximo do custo mínimo um algoritmo online pode alcançar. Veremos nas próximas seções que nenhum algoritmo online pode igualar esse custo para toda entrada, como é esperado. De fato, somente um algoritmo online que pudesse advinhar os pedidos futuros poderia escolher, em cada passo, o exato elemento \(e_i\) que minimiza globalmente o custo para uma entrada. Por isso, imaginamos \(\opt(z)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online, tanto determinísticos quanto aleatorizados, e veremos em que medida são nas seções seguintes atráves de suas competitividades.
+
+Primeiramente, para algoritmos determinísticos, provamos uma cota cota inferior para a competitividade, mostrando o quão próximos podem ser do algoritmo offline. 
+
+Seja \(z\) uma sequência de elementos de tamanho \(n\). Definimos duas funções auxliares \(\tau(i,x)\) e \(\theta(i,x)\) que dizem o tempo da próxima ocorrência e da última ocorrência do elemento \(x\) na sequência \(z\), respectivamente.
+
+\begin{definition}
+ Definimos a função \(\tau : [n] \times \Zcal \to \mathbb{N} \cup \{\infty\}\), que associa a cada posição \(j \in [n]\) e elemento \(x \in \Zcal\) o passo da próxima ocorrência de \(x\) após \(j\), como
+\begin{equation}
+\tau(i, x) =
+\begin{cases}
+  \min \{ i' > i \mid z_{i'} = x \}, & \text{se tal } i \text{ existe}, \\
+  +\infty, & \text{caso contrário}.
+\end{cases}
+\end{equation}
+\end{definition}
+
+\begin{definition}
+Definimos a função \(\theta : [n] \times \Zcal \to \mathbb{N}_0\) que associa a cada posição \(j \in [n]\) e elemento \(x \in \Zcal\) o instante da última ocorrência de \(x\) antes de \(j\), por
+\begin{equation}
+\\theta(j, x) =
+\begin{cases}
+  \max\{ t < j \mid \sigma_t = x \}, & \text{se tal } t \text{ existe}, \\[6pt]
+  0, & \text{caso contrário}.
+\end{cases}
+\end{equation}
+Aqui adotamos a convenção de que \(\rho(j,x)=0\) significa que \(x\) não ocorreu antes de \(j\).
+\end{definition}
 
 \begin{theorem}
-\label{teorema1}
-Todo algoritmo determinístico \(A\) tem coeficiente de competitividade ao menos \(k\). Isto é, \(C_A \geqslant k\).
+\label{teo:cota_det}
+Seja \(\Acal\) um algoritmo determinístico. Então, \(C_{\Acal} \geqslant k\).
 \end{theorem}
 
- xx melhorar prova
 \begin{proof}
 
-  Fixemos \(n = k + 1\). Como \(A\) é determinístico, podemos construir indutivamente uma sequência \(\sigma_p\) que faz \(A\) falhar em todos os \(T = |\sigma_p|\) pedidos. Calculemos \(\text{Custo}(\bold{FIF}, \sigma_p)\). 
+  Pela \Cref{def:comp} devemos provar que \(\Acal\) é no mínimo \(k\)-competitivo. Para isso, basta provar que existe uma entrada \(z\) arbitrariamente grande tal que \(\frac{\Acal(z)} {\opt(z)}\) é no mínimo \(k\). 
 
-  Seja \(\tau_t(i)\) o menor tempo \(t'\) maior que \(t\) tal que \(\sigma_{t'} = i\), ou seja, é o tempo do próximo pedido da página \(i\) a partir de \(t\). Suponha que em algum tempo ocorreu um falha de cache. Evidentemente, \textbf{OPT} deve escolher uma página \(p\) para descartar dentre \(k\) candidatas, o tamanho do cache. Supomos que \textbf{OPT} implementa \textbf{FIF}. Sabemos então que \(p\) só poderá ser solicitada novamente depois de todas as outras \(k - 1\) páginas, caso contrário, ela não teria sido escolhida por \textbf{FIF}. Nesse momento, como todas essas outras \(k - 1\) páginas estão no cache, só ocorrerão acertos de cache. De fato, no mínimo \(k - 1\) acertos, onde o caso limite acontece quando cada outra página é solicitada somente uma vez.
+  Como \(\Acal\) é determinístico, podemos construir indutivamente uma sequência patológica \(z\) que faz \(\Acal\) falhar em todos passos. Construímos \(z\) assim: tome \(z_1\) igual a qualquer elemento em \(\Zcal \setminus C_0\). Como \(z_1 \notin C_0\), o algoritmo falha no primeiro passo. Em seguida, tome \(z_2 = e_1\), e no segundo passo também falha. Tome \(z_3 = e_2\) e assim por diante até \(z_n = e_{n-1}\). Fica claro que \(\Acal\) falha em todos os passos e \(\Acal(z) = n\). Qual o custo \(\opt(z)\)?
 
-  Ou seja, \textbf{OPT} segue cada falha com ao menos \(k-1\) acertos. Então, \(\text{Custo}(\bold{OPT}, \sigma_p) \leqslant T/k = \text{Custo}(A, \sigma_p)/ k\). Segue que, \(C_A \geqslant k\).
+  Sabemos que o custo do algoritmo \textbf{FIF} iguala \(\opt(z)\), então calculemos o custo desse algoritmo quando processa \(z\). Pela descrição acima, \(z\) claramente envolve apenas \(|C_0 \cup \{z_1\}| = k+1\) elementos distintos, como o cache tem tamanho \(k\) qualquer algortimo falha em algum passo \(j\). Uma vez que \(e_j\) foi escolhido por \textbf{FIF}, segue que todo elemento \(x \in C_{j-1} \setminus \{e_j\}\) tem \(\tau(j,x) < \tau(j, e_j)\), como há \(k-1\) elementos desses, \(\tau(j, e_j) > j + k-1\). O pedido \(z_{j+1}\) está em \(C_j\) pois o único elemento envolvido fora do cache é \(e_j\) e, portanto, há um acerto. A mesma coisa se segue para os passos \(i = j+1, j+2, \dotsc,\) até \(\tau(j,e_j)\). Assim, o algoritmo acerta \(\tau(j, e_j) - j \ge k-1\) vezes após a falha no passo \(j\). \textbf{Conclusão}: após uma falha de cache, \textbf{FIF} acerto ao menos \(k-1\) vezes para \(z\). Aplicando esse fato para toda a sequência \(z\), chegamos em uma limite inferior para a quantidade de acertos \(n-\opt(z)\),
+\begin{equation*}
+  n - \opt(z) \ge \opt(z)(k-1).
+\end{equation*}
+Daí, \(\opt(z) \ge nk = \Acal(z)k\) e \(\frac{\Acal(z)}{\opt(z)} \le k\).
+
 \end{proof}
 
 \begin{definition}
 
-  xx melhorar definição
-
-  Seja \(\sigma\) uma sequência qualquer. Definimos uma sequência \(b_i, \ i = 1, \dots, m\) de \emph{blocos} de \(\sigma\) onde,
+  \textbf{Blocos de uma sequência}. Seja \(z\) uma sequência de elementos qualquer. Definimos uma sequência \(b\) onde,
 \begin{itemize}
-    \item \(b_1\) é o maior prefixo de \(\sigma\) que contém no máximo \(k\) páginas distintas.
+    \item \(b_1\) é o maior prefixo de \(z\) que contém no máximo \(k\) páginas distintas.
     \item \(b_i\) (\(1 < i \le m\)) começa imediatamente após \(b_{i-1}\) e termina no ponto anterior ao pedido que faria o total de páginas distintas no bloco ultrapassar \(k\). 
 \end{itemize}
 
 \end{definition}
 
-Lembramos que a política \textbf{LRU} descarta a página do cache com pedido mais antigo. 
+Lembramos que a política \(\lru\) descarta a página do cache com pedido mais antigo. 
 
 \begin{theorem}
-  O coeficiente de competitividade do algoritmo \textbf{LRU} é igual ao tamanho do cache. Isto é, \(C_{\bold{LRU}} = k\).
+  O coeficiente de competitividade do algoritmo \(\lru\) é igual ao tamanho do cache. Isto é, \(C_{\lru} = k\).
 \end{theorem}
 
-xx melhorar prova
 \begin{proof}
-  Seja \(\sigma\) uma sequência de pedidos qualquer. Nossa prova consiste em contar a quantidade de falhas para \textbf{LRU} e \textbf{OPT} dentro dos blocos de \(\sigma\). Considere um tempo o em que ocorreu uma falha qualquer para a página \(p\) no bloco \(b\).
-
-  Nesse ponto, \(p\) é a página mais recentemente solicitada e, para a política \textbf{LRU}, está no fim da fila de prioridade para sair novamente. Observe que ela não voltará ao início da fila enquanto o bloco \(b\) não acabar. De fato, o cache nesse ponto contém \(k-1\) páginas com prioridade de saída maior que \(p\) e, pela definição de bloco, ocorrerão pedidos a no máximo \(k-1\) páginas distintas: \(p\) está garantido de não sair novamente nesse bloco. Como \(p\) é arbitrário, segue que cada página de um bloco pode aumentar em no máximo um o custo total e como há \(k\) páginas por bloco, um bloco pode falhar no máximo \(k\) vezes. Então, \text{LRU} incorre um custo no máximo \(km\), onde \(m\) é a quantidade de blocos em \(\sigma\).
-
-  Para \textbf{OPT}, o argumento é um pouco diferente. Considere o bloco \(b_1\) mais o primeiro pedido \(p\) de \(b_2\). Esse conjunto contém \(k+1\) páginas distintas, e como o cache tem tamanho \(k\), nenhum algoritmo poderá servir esse conjunto sem falhar ao menos uma vez. Após servir o pedido \(p\), o cache deve conter somente \(k-1\) páginas diferentes de \(p\). Mas, como \(\sigma_2\) é maximal, o restante de \(\sigma_2\) mais o primeiro pedido de \(\sigma_3\) contém pedidos para \(k\) páginas diferentes de \(p\), incorrendo em pelo menos uma falta nesse conjunto. E assim por diante, resultando em pelo menos \(b - 1\) cache misses (se houver um só bloco \textbf{OPT} não falha). Então, 
+  Seja \(z\) uma sequência de pedidos qualquer. Considere um tempo o em que ocorreu uma falha qualquer para a página \(p\) no bloco \(b\).
+  Nesse ponto, \(p\) é a página mais recentemente solicitada e, para a política \textbf{LRU}, está no fim da fila de prioridade para sair novamente. Observe que ela não voltará ao início da fila enquanto o bloco \(b\) não acabar. De fato, o cache nesse ponto contém \(k-1\) páginas com prioridade de saída maior que \(p\) e, pela definição de bloco, ocorrerão pedidos a no máximo \(k-1\) páginas distintas: \(p\) está garantido de não sair novamente nesse bloco. Como \(p\) é arbitrário, segue que cada página de um bloco pode aumentar em no máximo um o custo total e como há \(k\) páginas por bloco, um bloco pode falhar no máximo \(k\) vezes. Então, \text{LRU} incorre um custo no máximo \(km\), onde \(m\) é a quantidade de blocos em \(\sigma\). Para \textbf{OPT}, o argumento é um pouco diferente. Considere o bloco \(b_1\) mais o primeiro pedido \(p\) de \(b_2\). Esse conjunto contém \(k+1\) páginas distintas, e como o cache tem tamanho \(k\), nenhum algoritmo poderá servir esse conjunto sem falhar ao menos uma vez. Após servir o pedido \(p\), o cache deve conter somente \(k-1\) páginas diferentes de \(p\). Mas, como \(\sigma_2\) é maximal, o restante de \(\sigma_2\) mais o primeiro pedido de \(\sigma_3\) contém pedidos para \(k\) páginas diferentes de \(p\), incorrendo em pelo menos uma falta nesse conjunto. E assim por diante, resultando em pelo menos \(b - 1\) cache misses (se houver um só bloco \textbf{OPT} não falha). Então, 
 
   \begin{equation*}
     \frac{\text{Custo}(\bold{LRU}, \sigma)}{\text{Custo}(\bold{OPT}, \sigma)} \leqslant kb/(b-1)
@@ -283,7 +223,6 @@ xx melhorar prova
 
   Segue que existem sequências arbitrariamente longas em que \text{LRU} erra no máximo \(k\) vezes menos do que \textbf{OPT}. Pelo Teorema \ref{teorema1}, nenhum algoritmo determinístico pode ter coeficiente maior que \(k\). Logo, \(C_{\bold{LRU}} = k\).
 \end{proof}
-
 
 \subsection{Prova de otimalidade da política \textbf{FIF}}
 
@@ -293,9 +232,7 @@ xx melhorar prova
 
 O teorema \ref{teorema1} diz que nenhum algoritmo determinístico tem coeficiente de competitividade menor que \(k\). 
 
-\begin{question}
 Quão bem se saem algoritmos aleatorizados para o problema de caching?
-\end{question}
 
 A presente seção mostra os resultados que respondem a pergunta. Damos continuidade na análise competitiva introduzindo o conceito de adversários e suas relações.
 

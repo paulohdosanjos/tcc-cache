@@ -10,8 +10,6 @@
 % 
 \DeclarePairedDelimiter\angb{\langle}{\rangle}
 
-% Algoritmos
-\newcommand{\opt}[1]{\textbf{OPT}(#1)}
 
 % Bold math letters
 % \mbf{f} \in \mathcal{F}
@@ -76,6 +74,11 @@
 % \tildeO(m)
 \newcommand*{\tildeOmega}{\tilde{\Omega}}
 
+
+%%% Algorithmic modifications %%%%
+
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Saída:}}
 
 %%% Local Variables:
 %%% mode: latex
