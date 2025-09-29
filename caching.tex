@@ -1,7 +1,7 @@
 % LTeX: language=pt-BR
 \chapter{Problema de caching tradicional}
 
-O problema de \emph{caching} considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(m \gg k\). Uma sequência de itens (páginas), chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. Antes de entrarmos nos modelos de predições, estudaremos o problema tradicional, ou seja, sem predições. 
+O problema de \emph{caching} considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(m \gg k\). Uma sequência de itens (páginas), chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. Antes de entrarmos nos modelos de predições, estudaremos o problema tradicional, ou seja, sem predições.
 
 \section{Notação}
 
@@ -25,6 +25,8 @@ O problema de \emph{caching} considera um sistema com dois níveis de memória: 
 	  \end{tabular}
 	\end{table}
 \egroup
+
+Partição de subconjuntos.
 
 
 \bgroup
@@ -189,7 +191,7 @@ Seja \(\Acal\) um algoritmo determinístico. Então, \(C_{\Acal} \geqslant k\).
 
   Como \(\Acal\) é determinístico, podemos construir indutivamente uma sequência patológica \(z\) que faz \(\Acal\) falhar em todos passos. Construímos \(z\) assim: tome \(z_1\) igual a qualquer elemento em \(\Zcal \setminus C_0\). Como \(z_1 \notin C_0\), o algoritmo falha no primeiro passo. Em seguida, tome \(z_2 = e_1\), e no segundo passo também falha. Tome \(z_3 = e_2\) e assim por diante até \(z_n = e_{n-1}\). Fica claro que \(\Acal\) falha em todos os passos e \(\Acal(z) = n\). Qual o custo \(\opt(z)\)?
 
-  Sabemos que o custo do algoritmo \textbf{FIF} iguala \(\opt(z)\), então calculemos o custo desse algoritmo quando processa \(z\). Pela descrição acima, \(z\) claramente envolve apenas \(|C_0 \cup \{z_1\}| = k+1\) elementos distintos, como o cache tem tamanho \(k\) qualquer algortimo falha em algum passo \(j\). Uma vez que \(e_j\) foi escolhido por \textbf{FIF}, segue que todo elemento \(x \in C_{j-1} \setminus \{e_j\}\) tem \(\tau(j,x) < \tau(j, e_j)\), como há \(k-1\) elementos desses, \(\tau(j, e_j) > j + k-1\). O pedido \(z_{j+1}\) está em \(C_j\) pois o único elemento envolvido fora do cache é \(e_j\) e, portanto, há um acerto. A mesma coisa se segue para os passos \(i = j+1, j+2, \dotsc,\) até \(\tau(j,e_j)\). Assim, o algoritmo acerta \(\tau(j, e_j) - j \ge k-1\) vezes após a falha no passo \(j\). \textbf{Conclusão}: após uma falha de cache, \textbf{FIF} acerto ao menos \(k-1\) vezes para \(z\). Aplicando esse fato para toda a sequência \(z\), chegamos em uma limite inferior para a quantidade de acertos \(n-\opt(z)\),
+  Sabemos que o custo do algoritmo \textbf{FIF} iguala \(\opt(z)\), então calculemos o custo desse algoritmo quando processa \(z\). Pela descrição acima, \(z\) claramente envolve apenas \(|C_0 \cup \{z_1\}| = k+1\) elementos distintos, como o cache tem tamanho \(k\) qualquer algortimo falha em algum passo \(j\). Uma vez que \(e_j\) foi escolhido por \textbf{FIF}, segue que todo elemento \(x \in C_{j-1} \setminus \{e_j\}\) tem \(\tau(j,x) < \tau(j, e_j)\), como há \(k-1\) elementos desses, \(\tau(j, e_j) > j + k-1\). O pedido \(z_{j+1}\) está em \(C_j\) pois o único elemento envolvido fora do cache é \(e_j\) e, portanto, há um acerto. A mesma coisa se segue para os passos \(i = j+1, j+2, \dotsc,\) até \(\tau(j,e_j)\). Assim, o algoritmo acerta \(\tau(j, e_j) - j \ge k-1\) vezes após a falha no passo \(j\). \textbf{Conclusão}: após uma falha de cache, \textbf{FIF} acerta ao menos \(k-1\) vezes para \(z\). Aplicando esse fato para toda a sequência \(z\), chegamos em uma limite inferior para a quantidade de acertos \(n-\opt(z)\),
 \begin{equation*}
   n - \opt(z) \ge \opt(z)(k-1).
 \end{equation*}
@@ -197,31 +199,57 @@ Daí, \(\opt(z) \ge nk = \Acal(z)k\) e \(\frac{\Acal(z)}{\opt(z)} \le k\).
 
 \end{proof}
 
+\subsection{Competitividade das políticas clássicas}
+
+Dada a cota inferior \(k\) para a competitividade de algoritmos determinísticos, perguntamos quão próximo desse limite os algoritmos clássicos chegam. Em particular, começamos provando que a política \(\lru\) atinge esse limite, ou seja, \(C_{\lru} = k\).
+
+Primeiramente, definimos o conceito de \emph{fases} de uma sequência qualquer \(z\) de elementos dado um algoritmo (determinístico? )\(\Acal\).
+
 \begin{definition}
-
-  \textbf{Blocos de uma sequência}. Seja \(z\) uma sequência de elementos qualquer. Definimos uma sequência \(b\) onde,
-\begin{itemize}
-    \item \(b_1\) é o maior prefixo de \(z\) que contém no máximo \(k\) páginas distintas.
-    \item \(b_i\) (\(1 < i \le m\)) começa imediatamente após \(b_{i-1}\) e termina no ponto anterior ao pedido que faria o total de páginas distintas no bloco ultrapassar \(k\). 
-\end{itemize}
-
+  \label{def:fases}
+  \textbf{Partição em fases de \(k\) falhas}. Sejam \(\Acal\) um algoritmo, \(z\) uma entrada qualquer para o algoritmo e considere uma partição \(\Pcal(z) = \Pcal_1, \dotsc, \Pcal_m\) qualquer de \(z\) com tamanho \(m\). Dizemos que \(\Pcal(z)\) é uma \emph{partição em fases de \(k\) falhas} para o algoritmo \(\Acal\) se \(\Acal(P_1)) \le k\) e \(\Acal(P_i) = k\) \(\forall i \in [2,m]\) e chamamos as subsequências \(P_i\), \(i \in [m]\) de \emph{fases} de \(z\) no contexto do algoritmo \(\Acal\). Ou seja, \(\Acal\) falha exatamente \(k\) vezes em cada fase, com exeção da primeira fase em que pode falhar \emph{até} \(k\) vezes. Dado \(\Acal\) e \(z\), usamos \(P_{\Acal}(z)\) para denotar qualquer partição em fases de \(k\) falhas.
 \end{definition}
 
-Lembramos que a política \(\lru\) descarta a página do cache com pedido mais antigo. 
+Evidentemente, não existe uma única partição em fases de \(k\) falhas dados \(\Acal\) e \(z\), no entanto, qualquer uma dessas servirá para nosso propósitos. Uma maneira direta de construir uma partição desse tipo é: I) observar o algoritmo \(\Acal\) quando processa \(z\) para calcular \(c_{\Acal}(i)\) \(\forall i \in [n]\); II) em seguida, começando do fim de \(z\), começar uma nova fase assim que o custo da fase anterior atingir \(k\). Claramante, essa construção respeita as duas condições da \Cref{def:fases}.
+
+\begin{lemma}
+  \label{lem:k-part}
+
+  Denotemos \(l_j\) o passo em que uma fase arbitrária \(P_j\) começa para \(j \in [2,m]\) \footnote{Como estamos interessados no comportamento assintótico para entradas suficientemente grandes, supomos sempre que \(m \gg 2\)}. Assim, \(z(l_j)\) é o primeiro elemento de \(P_j\); \(z(l_{j+1}-1)\) é o último. Seja \(p = z(l_j-1)\) o último elemento da fase anterior \(P_{j-1}\). Se \(\Acal = \lru\), então \(P_j\) contém \(k\) elementos distintos que são diferentes de \(p\).
+  \begin{proof} Olhamos para os pedidos imediatamente antes das \(k\) falhas de cache durante \(P_j\), então, há três casos: I) todos os pedidos são distintos e diferentes de \(p\); II) nem todos pedidos são distintos; III) todos os pedidos são distintos mas nem todos diferentes de \(p\)
+
+  I) Nada a provar: o lema segue diretamente nesse caso.
+
+  II) Suponha, então, que \(\Acal\) falha duas vezes quando foi pedido um elemento \(q \in P_j\) nos passos \(i_1\) e \(i_2\) com \(l_j \le i_1 < i_2 \le l_{j+1} - 1\). Segue então, que \(q\) foi descartado por \(\lru\) em algum passo intermediário \(i_1 < i < i_2\). Considere os elementos presentes no cache \(C_{i-1}\) imediatamente antes da falha no passo \(i\). Pela estratégia do algoritmo, \(q\) é o elemento com menor última ocorrência, então, os outros \(k-1\) elementos, distintos e diferentes de \(q\), foram pedidos nos passos \(i \in [i_1+1, i-1]\). Os elementos \(z(i_1) = q\) e \(z(i) \noteq q\) juntamente com os elementos em \(C_{i-1} \setminus \{q\}\) formam um conjunto de \(k+1\) páginas distintas em \(P_j\) e, portanto, sempre conterá ao menos \(k\) elementos diferentes de \(p\).
+
+  III) Suponha, então, que ocorre uma falha em algum tempo \(l_j \le i \le l_{j+1}-1\) com \(z(i) = p\). A fase \(j\) começa com \(p\) no cache, \(z(l_k-1) = p \in C_{k_i}\). De forma análoga ao caso II), invocamos o mesmo argumento e concluímos que \(z(l_j-1), z(l_j), \dotsc, z(i)}\) contém \(k\) elementos distintos. Então, já que \(z(l_j-1) = p\), há exatamente \(k\) elementos distintos e diferentes de \(p\) em \(z(l_j), \dotsc, z(i) \subset P_j\).
+
+\end{proof}
+\end{lemma}
+
+Finalmente, provamos que a \(\lru\) atinge a melhor competitivade para algoritmos determinísticos dada pelo \Cref{teo:cota_det}.
 
 \begin{theorem}
-  O coeficiente de competitividade do algoritmo \(\lru\) é igual ao tamanho do cache. Isto é, \(C_{\lru} = k\).
+  A competitividade do algoritmo \(\lru\) é igual ao tamanho do cache. Isto é, \(C_{\lru} = k\).
 \end{theorem}
 
 \begin{proof}
-  Seja \(z\) uma sequência de pedidos qualquer. Considere um tempo o em que ocorreu uma falha qualquer para a página \(p\) no bloco \(b\).
-  Nesse ponto, \(p\) é a página mais recentemente solicitada e, para a política \textbf{LRU}, está no fim da fila de prioridade para sair novamente. Observe que ela não voltará ao início da fila enquanto o bloco \(b\) não acabar. De fato, o cache nesse ponto contém \(k-1\) páginas com prioridade de saída maior que \(p\) e, pela definição de bloco, ocorrerão pedidos a no máximo \(k-1\) páginas distintas: \(p\) está garantido de não sair novamente nesse bloco. Como \(p\) é arbitrário, segue que cada página de um bloco pode aumentar em no máximo um o custo total e como há \(k\) páginas por bloco, um bloco pode falhar no máximo \(k\) vezes. Então, \text{LRU} incorre um custo no máximo \(km\), onde \(m\) é a quantidade de blocos em \(\sigma\). Para \textbf{OPT}, o argumento é um pouco diferente. Considere o bloco \(b_1\) mais o primeiro pedido \(p\) de \(b_2\). Esse conjunto contém \(k+1\) páginas distintas, e como o cache tem tamanho \(k\), nenhum algoritmo poderá servir esse conjunto sem falhar ao menos uma vez. Após servir o pedido \(p\), o cache deve conter somente \(k-1\) páginas diferentes de \(p\). Mas, como \(\sigma_2\) é maximal, o restante de \(\sigma_2\) mais o primeiro pedido de \(\sigma_3\) contém pedidos para \(k\) páginas diferentes de \(p\), incorrendo em pelo menos uma falta nesse conjunto. E assim por diante, resultando em pelo menos \(b - 1\) cache misses (se houver um só bloco \textbf{OPT} não falha). Então, 
+      \(\opt\) contém \(p\) no começo da fase \(P(i)\), pois esse foi o último pedido da fase anterior. Como nesse instante, ele não pode conter também os outros ao menos \(k\) elementos distintos em \(P(i)\) ocorrerá ao menos uma falha nessa fase. Como o fase é arbitrária segue que \(\opt\) falha ao menos uma vez em toda fase (e a fase inicial), e, portanto, \(\opt(z) \ge m\).
+
+  Assim, para toda entrada \(z\), podemos limitar o custo total fazendo a soma por fases,
 
   \begin{equation*}
-    \frac{\text{Custo}(\bold{LRU}, \sigma)}{\text{Custo}(\bold{OPT}, \sigma)} \leqslant kb/(b-1)
-  \end{equation*}
+    \begin{align*}
+    \lru(z) 
+    &= \sum_{i=1}^n c_{\lru}(i) = \sum_{j=1}^m \lru(P(j)) 
+    \\
+    &= \lru(P(1)) + \sum_{j=2}^m \lru(P(j))
+    \\
+    &= \lru(P(1)) + (m-1)k \le k + (m-1)k = mk.
+    \end{align*}
+  \end{equation}
 
-  Segue que existem sequências arbitrariamente longas em que \text{LRU} erra no máximo \(k\) vezes menos do que \textbf{OPT}. Pelo Teorema \ref{teorema1}, nenhum algoritmo determinístico pode ter coeficiente maior que \(k\). Logo, \(C_{\bold{LRU}} = k\).
+  Logo, para toda entrada \(z\) de tamanho \(n\), \(\frac{\lru(z)}{\opt(z)} \le k\), e juntamento com o \Cref{teo:cota_det} segue o teorema.
 \end{proof}
 
 \subsection{Prova de otimalidade da política \textbf{FIF}}

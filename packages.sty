@@ -1,4 +1,4 @@
-\usepackage[english,brazil]{babel}
+\usepackage[brazil]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{booktabs}
@@ -21,6 +21,8 @@
             dateabbrev=false]{biblatex}
 \addbibresource{bib.bib}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \usepackage[textsize=scriptsize]{todonotes}
 
@@ -31,6 +33,18 @@
 \usepackage{amsthm}
 \usepackage{mathrsfs}           % for \mathscr
 
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pdfusetitle,
+            pdfauthor={Paulo Henrique Albuquerque},
+            colorlinks=true,
+            hypertexnames=true,
+            bookmarks=true,
+           ]{hyperref}
+\else
+\fi
+\usepackage{cleveref}
 
 \usepackage{suffix}
 \usepackage{enumerate}
@@ -55,18 +69,3 @@
 \usepackage{enumitem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{ifpdf}
-\ifpdf
-\usepackage[pdftex,%
-            pdfauthor={Paulo Henrique Albuquerque dos Anjos de Souza},%
-            pdftitle={monografia},%
-            % colorlinks=true,%
-            % linkcolor=black,%
-            % citecolor=black,%
-            % urlcolor=black,%
-            hypertexnames=true,%
-            bookmarks=true]{hyperref}
-\usepackage{cleveref}
-\else
-\fi
