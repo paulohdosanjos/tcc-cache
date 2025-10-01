@@ -3,111 +3,75 @@
 
 O problema de \emph{caching} considera um sistema com dois níveis de memória: uma memória rápida ou cache de tamanho \(k\) e uma memória lenta de tamanho \(m \gg k\). Uma sequência de itens (páginas), chamada de sequência de pedidos, é fornecida como entrada ao \emph{algoritmo de caching} e deve ser servida em ordem. Se a página solicitada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um \emph{acerto de cache}. Se a página solicitada não estiver no cache e sim na memória lenta, acontece uma \emph{falha de cache}. Nesse caso, o algoritmo traz a página da memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo com uma regra de substituição ou \emph{política}. O objetivo do problema é encontrar uma política que minimize a quantidade de falhas de cache. Antes de entrarmos nos modelos de predições, estudaremos o problema tradicional, ou seja, sem predições.
 
-\section{Notação}
+%resumo do capítulo também
 
-\bgroup
-	\renewcommand{\arraystretch}{1.2}
-	\begin{table}[htbp]
-	  \caption{Notação básica}
-          \label{tbl:notation}
-	  \centering
-	  \begin{tabular}{r c p{13cm}}
-	    \toprule
-            \(\ind{P}\) & \(\coloneqq\)& \(1\) se o predicado \(P\) for verdadeiro, e zero caso contrário \\
-            \([n]\)
-            & \(\coloneqq\)
-            & \(\{1, \dotsc, n\}\) para cada \(n
-              \in \Naturals\)\\
-            \(\binom{X}{n}\) & \(\coloneqq\)& o conjunto de todos os subconjuntos de \(X\) de tamanho \(n\) para cada \(n \in [|X|]\) \\
-            \(X + y\) & \(\coloneqq\)& \(X \cup \{y\}\) dado que \(X\subseteq U\) e \(y \in U\) \\
-            \(X - y\) & \(\coloneqq\)& \(X \setminus \{y\}\) dado que \(X\subseteq U\) e \(y \in U\)\\
-            \bottomrule
-	  \end{tabular}
-	\end{table}
-\egroup
+É dado um universo abstrato \(\Zcal\) (\(|\Zcal| \gg k\)), com elementos denominados \emph{páginas}. Uma sequência de \emph{pedidos} \(\boldz\) de tamanho \(n\) é fixada, onde cada elemento \(z[i]\) é uma página. Os pedidos chegam um por vez nos passos \(i \in [n]\) do algoritmo de caching, que deve satisfazê-los conforme a descrição informal dada acima. O algoritmo é munido de uma função \(\pi\), chamada \emph{política}, que escolhe qual página descartar caso ocorra uma \emph{falha de cache}, isto é, caso \(z[i]\) não esteja no cache. Após escolher e decartar uma página, o algoritmo coloca o pedido \(z[i]\) no cache. O algoritmo de caching munido de uma política \(\pi\) é denotado por \(\Acal_\pi\). O processamento se inicia com um cache inicial \(C \subset \Zcal\) de \(k\) páginas e a saída \(\Acal_\pi(C,\boldz)\) do algoritmo é a quantidade total de falhas de cache. Abaixo está definido o funcionamento de \(\Acal_\pi\), dados \(\pi\), \(C\) e \(\boldz\).
 
-Partição de subconjuntos.
+\section{Formalização do problema}
+Tendo como base a descrição informal dada acima, definimos mais formalmente o problema de caching. Como é de costume na literatura que trata desse problema sobre a pespectiva do custo de falhas de cache, não será necessária uma notação muito rigorosa e, por isso, definimos o problema a partir de uma notação simples e suficientemente clara para nossos propósitos.
 
-
-\bgroup
-	\renewcommand{\arraystretch}{1.2}
-	\begin{table}[htbp]
-	  \caption{Notação para sequências}
-          \label{tbl:seq_notation}
-	  \centering
-	  \begin{tabular}{r c p{13cm}}
-	    \toprule
-            \(X^*\)
-            &\(\coloneqq\)
-            & \(\bigcup_{n = 0}^\infty X^n\)\\
-            \(\emptyseq\)
-            & \(\coloneqq\)
-            & a sequência vazia\\
-            \(\angb{x_1, \dotsc, x_t}\)
-            & \(\coloneqq\)
-            & a sequência de tamanho \(t\) em que o \(k\)-th
-              elemento é \(x_k\) para cada \(k \in [t]\) \\
-            \(\angb{x_i, \dotsc, x_j}\)
-            & \(\coloneqq\)
-            & \(\emptyseq\) se \(i > j\), a sequência em que o \(k\)-th elemento
-              é \(x_{i + k -1}\) para cada \(k \in [j - i + 1]\)
-              caso contrário\\
-            \(\boldx_{i:j}\)
-            & \(\coloneqq\)
-            & \(\angb{x_i, \dotsc, x_j}\)\\
-            \bottomrule
-	  \end{tabular}
-	\end{table}
-\egroup
-
-\section{Preliminares}
-
-O problema \(\textsc{Caching}(n,k)\) denota o problema de caching para um cache de tamanho \(k\) e sequências de pedidos de tamanho \(n\). É dado um universo \(\Zcal\) (\(|\Zcal| \gg k\)) e elementos \(z_i \in \Zcal\) chegam um por vez em passos \(i \in [n]\). O contéudo do cache imediatamente após processar o pedido \(i\) é \(C_i \subseteq \Zcal\). A entrada é \(z = \angb{z_1, \dotsc, z_n}\) e o conteúdo inicial do cache \(C_0\). Como estamos interessados no comportamento assintótico, ou seja, em entradas grandes, omitiremos \(C_0\) da entrada em geral e também supomos que sempre começa cheio (\(|C_0| = k\)), o conteúdo específico não importa. Um algoritmo \(\Acal\) para o problema de caching, então, deve escolher no passo \(i\) um elemento \(e_i\) para descartar do cache e substituir pelo elemento \(z_i\) em uma falha de cache, isto é, quando \(z_i \notin C_{i-1}\). A saída do problema é a quantidade total de falhas de cache. Os conjuntos \(C_i\) ou, alternativamente, os elementos escolhidos para descarte \(e_i\); em um acerto de cache \(e_i = \emptyset\).
-
-\subsection{Discussão sobre o tamanho da entrada}
-
-comportamento assintótico, condições iniciais, regret time analysis, tamanho da entrada. https://www.cs.cmu.edu/~sleator/papers/amortized-efficiency.pdf. Constante aditiva.
-
-A partir deste ponto, trataremos sempre da instância \textsc{Caching(n,k)} a menos que se fale o contrário, sem necessidade de repetir que o cache tem tamanho \(k\) e a entrada z possui tamanho \(n\). Seja \(\Acal\) um algoritmo online para o problema de caching. Inicialmente, consideramos os algoritmos online determinísticos, que não possuem um gerador de números aleatórios para auxiliar suas decisões. Conforme veremos adiante, isso representa menos poder ao algoritmo: os algoritmos aleatorizados conseguem atingir um desemepenho muito melhor na teoria. Assim, um algoritmo online \(\Acal\) para \(\textsc{Caching}(n,k)\) é determinado pela estratégia que decide os elementos \(e_i\) a serem descartados após uma falha de cache. A redução das falhas de cache depende, em grande parte, de manter no cache as páginas que serão requisitadas em breve. Como o algoritmo é online, deve tomar suas decisões sem conhecimento dos pedidos futuros.
-
-\begin{definition}
-  O custo \(\Acal(z)\) quando \(\Acal\) processa a entrada \(z\) é a quantidade total de falhas de cache,
-  \begin{equation}
-    \Acal(z) = \sum_{i=1}^{|n|} \ind{z_i \notin C_{i-1}}.
-  \end{equation}
+\begin{definition}[Problema de caching]
+  \label{def:cache}
+  Uma \textbf{instância online de caching} é definida pela tripla \((\Zcal, k, \pi) \), onde \(\Zcal\) é um conjunto arbitrário chamado de conjunto de \textbf{páginas}, \(k \in \Naturals\) é o \textbf{tamanho do cache} e \(\pi \colon \Seq(\binom{\Zcal}{k}) \times \Seq(\Zcal) \to \Zcal\) é uma função, chamada \textbf{política}, que respeita a seguinte condição: se \(c \in \Seq(\binom{\Zcal}{k})\) com \(|c| = m\) e \(z \in \Seq(\Zcal)\), então \(\pi((a,b)) \in c_m\).
 \end{definition}
 
-O esqueleto de um algoritmo para o problema de caching é, portanto,
+Seja \(\Ccal \coloneq (\Zcal, k, \pi)\) uma instância online de caching. Nós associamos a \(\Ccal\) uma função \(\Acal_\Ccal\) chamada \textbf{algoritmo online de caching} que recebe os seguintes parâmetros:
+  \begin{itemize}
+    \item \(\boldz \in \Seq(\Zcal)\), que chamamos de \textbf{sequência de pedidos};
+    \item \(c \in \binom{\Zcal}{k}\), que chamadas de \textbf{cache inicial}
+  \end{itemize}
+
+É importante alertar que as sequências de pedidos e o cache inicial não serão definidos para pares de sequências de tamanho arbitrário. Em vez disso, eles serão definidos apenas para pares de sequências cujos tamanhos possam surgir no contexto de aprendizado \emph{online} que definiremos mais adiante. No entanto, por conveniência, definimos um oráculo do jogador (ou do adversário) como uma função de \(\Seq(X) \times \Seq(Y)\) (ou \(\Seq(X) \times \Seq(D)\)) para \(D\) (ou \(Y\)).
+
+Defina \(A_\pi\) de forma iterativa como no \Cref{algo:cache}. Para \(i \in \Naturals \setminus \{0\}\), chamamos de \(i\)-ésimo \emph{passo} a iteração do \Cref{algo:cache} na qual é definido o \((i+1)\)-ésimo elemento \(c_{i+1}\) da sequência retornada pelo algoritmo.
 
 \begin{algorithm}
-  \caption{Esqueleto de \(\mathbf{A}(C_0, z)\)}
-  \label{algo:LRU}
+  \caption{Definição de \(\Acal_\pi(c, \boldz)\)}
+  \label{algo:cache}
   \begin{algorithmic}
-    \Require\\
-    \begin{enumerate}[label=(\roman*),ref=\roman*]
-    \item Sequência \(z\) de tamanaho \(n\) 
-    \item Conteúdo do cache inicial \(C_0\)
-    \end{enumerate}
+    \Require \(c\) e \(\boldz\), que são um cache inicial e uma sequência de pedidos de tamanho \(n \in \Naturals\), respectivamente.
 
     %
-    \Ensure Número total de falhas de cache \(\mathbf{A}(z)\).
+    \Ensure \(\boldc \in \binom{\Zcal}{k}^n\)
     % 
-    \State \(c \gets 0\)
+    \State \(c_1 \gets c\)
     \For{\(i = 1\)~to~\(n\)}
     %
-    \If {\(z_i \notin C_{i-1}\) }
-      \State escolhe \(e_i \in C_{i-1}\) para descartar
-      \State \(C_i \gets C_{i-1} \setminus \{e_i\}\cup \{z_i\} \)
-      \State \(c \gets c + 1\)
+    \If {\(z_i \notin c_{i}\)}
+    \State \(c_{i+1} \gets c_{i} - \pi(\angb{c_1, \dotsc, c_{i}}, \angb{z_1, \dotsc, z_{i}}) + z_i \)
     \Else
-      \State \(C_i \gets C_{i-1}\)
+    \State \(c_{i+1} \gets c_i\)
     \EndIf
     \EndFor
-    \State \Return \(c\)
+    \State \Return \(\boldc\)
   \end{algorithmic}
 \end{algorithm}
 
-A escolha de \(e_i\) pode ser feita de forma determística ou não. 
+\newpage
+
+Ao longo do texto o único parâmetro da instância online de caching \(C = (\Zcal, k, \pi)\) que será variado é a política \(\pi\); o conjunto \(\Zcal\) e o tamanho do cache \(k \in \Naturals\) são fixados. Assim, a instância é determinada unicamente pela política \(\pi\). Por esta razão, doravante denotaremos o algoritmo de caching associado à instância simplesmente por \(\Acal_{\pi}\), e usaremos esta notação para nos referir, de forma conversível, tanto ao algoritmo quanto à instância definida por essa política.
+
+Dados um cache inicial \(c\) e uma sequência de pedidos \(\boldz\), seja \(\boldc = \Acal_\pi(c, \boldz)\) para alguma política \(\pi\). Conforme é intuitvo ver pela definição do \Cref{algo:cache}, cada \(c_i \in \binom{\Zcal}{k}\)\footnote{Supomos que o cache sempre está cheio e não nos preocupamos com os acertos de cache inevitáveis no começo do processamento quando o cache pode estar não totalmente cheio} representa o \emph{conteúdo do cache}, ou seja, as páginas presentes no cache, imediatamente antes do algoritmo processar o \emph{pedido} \(z_i\) para todo \(i \in [n]\), onde \(n = |\boldz|\). Nos referimos aos elementos \(c_i\) simplesmente por \emph{cache} no passo \(i\). Se \(z_i \notin c_i\), dizemos que houve uma \emph{falha de cache} no passo \(i\). A política \(\pi\), então, determina uma página \(p = \pi(\angb{c_1, \dotsc, c_{i}}, \angb{z_1, \dotsc, z_{i}}) \).  A política \(\pi\) recebe como parâmetro os \emph{históricos} do cache e da sequência de pedidos desde o inicio do processamento até o passo atual \(i\), que são as sequências \(\boldc_{1:i} = \angb{c_1, \dotsc, c_i}\) e \(\boldz_{1:i} = \angb{z_1, \dotsc, z_i}\), respectivamente. Note que a condição exigida da política na \Cref{def:cache} diz que \(p\) deve estar no cache do passo atual \(c_i\), o que respeita a semântica do problema de caching. Se \(z_i \in c_i\), houve um \emph{acerto de cache} no passo \(i\) e o cache não é alterado pelo algoritmo.
+
+Conforme veremos nas próximas seções, estamos interessados somente no comportamento assintótico do algoritmo, isto é, o comportamento para entradas muito grandes, em que nenhuma quantidade de interesse depende do cache inicial \(c_1\). Portanto, omitiremos \(c_1\) da entrada quase sempre e passamos a denotar a saída do algoritmo simplesmente por \(\Acal_\pi(\boldz)\).
+
+A parte essencial do algoritmo \(\Acal_\pi\) é a política \(\pi\). Essa função
+
+Assim, o algoritmo online \(\Acal\) para \(\textsc{Caching}(n,k)\) é determinado pela função estratégia que decide os elementos \(e(i)\) a serem descartados após uma falha de cache. A redução das falhas de cache depende, em grande parte, de manter no cache as páginas que serão requisitadas em breve. Como o algoritmo é online, deve tomar suas decisões sem conhecimento dos pedidos futuros.
+
+\begin{definition}
+  Seja \(\Acal\) um algoritmo para o problema de caching e \(s\) uma sequência de elementos d
+  O custo \(\Acal(z)\) quando \(\Acal\) processa a entrada \(z\) é a quantidade total de falhas de cache,
+  \begin{equation}
+    \Acal(z) = \sum_{i=1}^{|n|} \ind{z[i] \notin C[i-1]}.
+  \end{equation}
+\end{definition}
+
+Além disso, podemos dada uma sequência \(z\), definimos o custo
+
+O esqueleto de um algoritmo para o problema de caching é, portanto,
+
+A escolha de \(e(i)\) pode ser feita de forma determística ou não. 
 
 \begin{definition}
   Seja \(\mathbb{A}\) o conjunto de algoritmos determinísticos. Um \textbf{algoritmo aleatorizado} \(A_r\) para o problema de caching é uma variável aleatória sobre \(\mathbb{A}\). 
@@ -123,7 +87,7 @@ A escolha de \(e_i\) pode ser feita de forma determística ou não.
   \end{equation}
 \end{definition}
 
-\textcite{Belady66} propôs um simples algoritmo offline, isto é, que tem acesso a toda entrada \(z\) a priori, ótimo para o problema de caching. A estratégia do algoritmo de Belady, chamada \textit{Furthest-in-the-Future} (abreviada por \textbf{FIF}), escolhe o elemento \(e_i\) que permanecerá sem pedidos pelo maior tempo no futuro. Ele demonstrou que tal estratégia tem custo \(\opt(z)\) para qualquer entrada \(z\). A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante no final da seção. Evidentemente, não é possível implementar explicitamente o algoritmo em um cenário online, mesmo assim, seu custo servirá como base de comparação para algorimos online, que é o cerne da \textbf{análise competitiva}.
+\textcite{Belady66} propôs um simples algoritmo offline, isto é, que tem acesso a toda entrada \(z\) a priori, ótimo para o problema de caching. A estratégia do algoritmo de Belady, chamada \textit{Furthest-in-the-Future} (abreviada por \textbf{FIF}), escolhe o elemento \(e(i)\) que permanecerá sem pedidos pelo maior tempo no futuro. Ele demonstrou que tal estratégia tem custo \(\opt(z)\) para qualquer entrada \(z\). A prova de otimalidade desse algoritmo guloso não é trivial, então daremos somente o esboço da prova mais adiante no final da seção. Evidentemente, não é possível implementar explicitamente o algoritmo em um cenário online, mesmo assim, seu custo servirá como base de comparação para algorimos online, que é o cerne da \textbf{análise competitiva}.
 
 \subsection{C-competitividade}
 
@@ -137,21 +101,29 @@ A escolha de \(e_i\) pode ser feita de forma determística ou não.
 Evidentemente, para algoritmos determinísticos, a esperança pode ser dispensada. Além disso, o \textbf{coeficiente de competitividade}, ou simplesmente competitividade, de \(\Acal\), denotado \(C_{\Acal}\), é o ínfimo de \(\alpha\) tal que \(\Acal\) é \(\alpha\)-competitivo,
 \end{definition}
 
+\subsection{Discussão sobre o tamanho da entrada}
+
+comportamento assintótico, condições iniciais, regret time analysis, tamanho da entrada. https://www.cs.cmu.edu/~sleator/papers/amortized-efficiency.pdf. Constante aditiva.
+
+
+
 Caracterizamos assim a análise competitiva, em que o o desemepenho de um algoritmo online é determinado pela razão entre seu custo e o custo do algoritmo offline\footnote{A partir daqui dispensaremos a palavra "ótimo": sempre que aparar algoritmo offline será o ótimo} no pior caso. Determinando a competitividade de diferentes algoritmos, temos uma base para comparar as estratégias online. 
 
-\subsection{Algortimos determinísticos clássicos}
+\section{Algortimos determinísticos clássicos}
+
+Seja \(\Acal\) um algoritmo online para o problema de caching. Inicialmente, consideramos os algoritmos online determinísticos, que não possuem um gerador de números aleatórios para auxiliar suas decisões. Conforme veremos adiante, isso representa menos poder ao algoritmo: os algoritmos aleatorizados conseguem atingir um desemepenho muito melhor na teoria. 
 
 Visanto incorrer um custo baixo, algumas estratégias clássicas são formuladas e os algoritmos correspondentes.  
 
-No algortimo \(\lru\) (\textit{Least Recently Used}), \(e_i\) é o elemento no cache cujo último pedido é mais antigo como um indicativo que não aparecerá tão breve, pois há muito tempo não foi requisitada.
+No algortimo \(\lru\) (\textit{Least Recently Used}), \(e(i)\) é o elemento no cache cujo último pedido é mais antigo como um indicativo que não aparecerá tão breve, pois há muito tempo não foi requisitada.
 
-No algortimo \(\mathbf{A_{FIFO}}\) (\textit{First-in, First-out}), \(e_i\) é o elemento que está há mais tempo no cache. 
+No algortimo \(\mathbf{A_{FIFO}}\) (\textit{First-in, First-out}), \(e(i)\) é o elemento que está há mais tempo no cache. 
 
-No algortimo \(\mathbf{A_{LFU}}\) (\textit{Least Frequently Used}) \(e_i\) é o elemento no cache que foi menos requisitada no passado.
+No algortimo \(\mathbf{A_{LFU}}\) (\textit{Least Frequently Used}) \(e(i)\) é o elemento no cache que foi menos requisitada no passado.
 
 Aqui, não analisamos os detalhes das implementações e as restrições de tempo e espaço desses algoritmos: nosso foco é o custo do algoritmo, isto é, a quantidade total de falhas de cache, que independente da exata implementação de cada estratégia nos algoritmos.
 
-Foi dito que existe um algoritmo determinístico ótimo offline (que implementa a política \textbf{FIF}) que incorre o custo mínimo para uma entrada \(z\). A dúvida natural que surje é quão próximo do custo mínimo um algoritmo online pode alcançar. Veremos nas próximas seções que nenhum algoritmo online pode igualar esse custo para toda entrada, como é esperado. De fato, somente um algoritmo online que pudesse advinhar os pedidos futuros poderia escolher, em cada passo, o exato elemento \(e_i\) que minimiza globalmente o custo para uma entrada. Por isso, imaginamos \(\opt(z)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online, tanto determinísticos quanto aleatorizados, e veremos em que medida são nas seções seguintes atráves de suas competitividades.
+Foi dito que existe um algoritmo determinístico ótimo offline (que implementa a política \textbf{FIF}) que incorre o custo mínimo para uma entrada \(z\). A dúvida natural que surje é quão próximo do custo mínimo um algoritmo online pode alcançar. Veremos nas próximas seções que nenhum algoritmo online pode igualar esse custo para toda entrada, como é esperado. De fato, somente um algoritmo online que pudesse advinhar os pedidos futuros poderia escolher, em cada passo, o exato elemento \(e(i)\) que minimiza globalmente o custo para uma entrada. Por isso, imaginamos \(\opt(z)\) como um custo intrínseco da entrada. Assim, há uma limitação para os algoritmos online, tanto determinísticos quanto aleatorizados, e veremos em que medida são nas seções seguintes atráves de suas competitividades.
 
 Primeiramente, para algoritmos determinísticos, provamos uma cota cota inferior para a competitividade, mostrando o quão próximos podem ser do algoritmo offline. 
 
@@ -189,9 +161,9 @@ Seja \(\Acal\) um algoritmo determinístico. Então, \(C_{\Acal} \geqslant k\).
 
   Pela \Cref{def:comp} devemos provar que \(\Acal\) é no mínimo \(k\)-competitivo. Para isso, basta provar que existe uma entrada \(z\) arbitrariamente grande tal que \(\frac{\Acal(z)} {\opt(z)}\) é no mínimo \(k\). 
 
-  Como \(\Acal\) é determinístico, podemos construir indutivamente uma sequência patológica \(z\) que faz \(\Acal\) falhar em todos passos. Construímos \(z\) assim: tome \(z_1\) igual a qualquer elemento em \(\Zcal \setminus C_0\). Como \(z_1 \notin C_0\), o algoritmo falha no primeiro passo. Em seguida, tome \(z_2 = e_1\), e no segundo passo também falha. Tome \(z_3 = e_2\) e assim por diante até \(z_n = e_{n-1}\). Fica claro que \(\Acal\) falha em todos os passos e \(\Acal(z) = n\). Qual o custo \(\opt(z)\)?
+  Como \(\Acal\) é determinístico, podemos construir indutivamente uma sequência patológica \(z\) que faz \(\Acal\) falhar em todos passos. Construímos \(z\) assim: tome \(z_1\) igual a qualquer elemento em \(\Zcal \setminus C[0]\). Como \(z_1 \notin C[0]\), o algoritmo falha no primeiro passo. Em seguida, tome \(z_2 = e_1\), e no segundo passo também falha. Tome \(z_3 = e_2\) e assim por diante até \(z_n = e_{n-1}\). Fica claro que \(\Acal\) falha em todos os passos e \(\Acal(z) = n\). Qual o custo \(\opt(z)\)?
 
-  Sabemos que o custo do algoritmo \textbf{FIF} iguala \(\opt(z)\), então calculemos o custo desse algoritmo quando processa \(z\). Pela descrição acima, \(z\) claramente envolve apenas \(|C_0 \cup \{z_1\}| = k+1\) elementos distintos, como o cache tem tamanho \(k\) qualquer algortimo falha em algum passo \(j\). Uma vez que \(e_j\) foi escolhido por \textbf{FIF}, segue que todo elemento \(x \in C_{j-1} \setminus \{e_j\}\) tem \(\tau(j,x) < \tau(j, e_j)\), como há \(k-1\) elementos desses, \(\tau(j, e_j) > j + k-1\). O pedido \(z_{j+1}\) está em \(C_j\) pois o único elemento envolvido fora do cache é \(e_j\) e, portanto, há um acerto. A mesma coisa se segue para os passos \(i = j+1, j+2, \dotsc,\) até \(\tau(j,e_j)\). Assim, o algoritmo acerta \(\tau(j, e_j) - j \ge k-1\) vezes após a falha no passo \(j\). \textbf{Conclusão}: após uma falha de cache, \textbf{FIF} acerta ao menos \(k-1\) vezes para \(z\). Aplicando esse fato para toda a sequência \(z\), chegamos em uma limite inferior para a quantidade de acertos \(n-\opt(z)\),
+  Sabemos que o custo do algoritmo \textbf{FIF} iguala \(\opt(z)\), então calculemos o custo desse algoritmo quando processa \(z\). Pela descrição acima, \(z\) claramente envolve apenas \(|C[0] \cup \{z_1\}| = k+1\) elementos distintos, como o cache tem tamanho \(k\) qualquer algortimo falha em algum passo \(j\). Uma vez que \(e_j\) foi escolhido por \textbf{FIF}, segue que todo elemento \(x \in C_{j-1} \setminus \{e_j\}\) tem \(\tau(j,x) < \tau(j, e_j)\), como há \(k-1\) elementos desses, \(\tau(j, e_j) > j + k-1\). O pedido \(z_{j+1}\) está em \(C_j\) pois o único elemento envolvido fora do cache é \(e_j\) e, portanto, há um acerto. A mesma coisa se segue para os passos \(i = j+1, j+2, \dotsc,\) até \(\tau(j,e_j)\). Assim, o algoritmo acerta \(\tau(j, e_j) - j \ge k-1\) vezes após a falha no passo \(j\). \textbf{Conclusão}: após uma falha de cache, \textbf{FIF} acerta ao menos \(k-1\) vezes para \(z\). Aplicando esse fato para toda a sequência \(z\), chegamos em uma limite inferior para a quantidade de acertos \(n-\opt(z)\),
 \begin{equation*}
   n - \opt(z) \ge \opt(z)(k-1).
 \end{equation*}
@@ -220,9 +192,9 @@ Evidentemente, não existe uma única partição em fases de \(k\) falhas dados 
 
   I) Nada a provar: o lema segue diretamente nesse caso.
 
-  II) Suponha, então, que \(\Acal\) falha duas vezes quando foi pedido um elemento \(q \in P_j\) nos passos \(i_1\) e \(i_2\) com \(l_j \le i_1 < i_2 \le l_{j+1} - 1\). Segue então, que \(q\) foi descartado por \(\lru\) em algum passo intermediário \(i_1 < i < i_2\). Considere os elementos presentes no cache \(C_{i-1}\) imediatamente antes da falha no passo \(i\). Pela estratégia do algoritmo, \(q\) é o elemento com menor última ocorrência, então, os outros \(k-1\) elementos, distintos e diferentes de \(q\), foram pedidos nos passos \(i \in [i_1+1, i-1]\). Os elementos \(z(i_1) = q\) e \(z(i) \noteq q\) juntamente com os elementos em \(C_{i-1} \setminus \{q\}\) formam um conjunto de \(k+1\) páginas distintas em \(P_j\) e, portanto, sempre conterá ao menos \(k\) elementos diferentes de \(p\).
+  II) Suponha, então, que \(\Acal\) falha duas vezes quando foi pedido um elemento \(q \in P_j\) nos passos \(i_1\) e \(i_2\) com \(l_j \le i_1 < i_2 \le l_{j+1} - 1\). Segue então, que \(q\) foi descartado por \(\lru\) em algum passo intermediário \(i_1 < i < i_2\). Considere os elementos presentes no cache \(C[i-1]\) imediatamente antes da falha no passo \(i\). Pela estratégia do algoritmo, \(q\) é o elemento com menor última ocorrência, então, os outros \(k-1\) elementos, distintos e diferentes de \(q\), foram pedidos nos passos \(i \in [i_1+1, i-1]\). Os elementos \(z(i_1) = q\) e \(z(i) \neq q\) juntamente com os elementos em \(C[i-1] \setminus \{q\}\) formam um conjunto de \(k+1\) páginas distintas em \(P_j\) e, portanto, sempre conterá ao menos \(k\) elementos diferentes de \(p\).
 
-  III) Suponha, então, que ocorre uma falha em algum tempo \(l_j \le i \le l_{j+1}-1\) com \(z(i) = p\). A fase \(j\) começa com \(p\) no cache, \(z(l_k-1) = p \in C_{k_i}\). De forma análoga ao caso II), invocamos o mesmo argumento e concluímos que \(z(l_j-1), z(l_j), \dotsc, z(i)}\) contém \(k\) elementos distintos. Então, já que \(z(l_j-1) = p\), há exatamente \(k\) elementos distintos e diferentes de \(p\) em \(z(l_j), \dotsc, z(i) \subset P_j\).
+  III) Suponha, então, que ocorre uma falha em algum tempo \(l_j \le i \le l_{j+1}-1\) com \(z(i) = p\). A fase \(j\) começa com \(p\) no cache, \(z(l_k-1) = p \in C_{k_i}\). De forma análoga ao caso II), invocamos o mesmo argumento e concluímos que \(z(l_j-1), z(l_j), \dotsc, z(i)\) contém \(k\) elementos distintos. Então, já que \(z(l_j-1) = p\), há exatamente \(k\) elementos distintos e diferentes de \(p\) em \(z(l_j), \dotsc, z(i) \subset P_j\).
 
 \end{proof}
 \end{lemma}
@@ -238,7 +210,6 @@ Finalmente, provamos que a \(\lru\) atinge a melhor competitivade para algoritmo
 
   Assim, para toda entrada \(z\), podemos limitar o custo total fazendo a soma por fases,
 
-  \begin{equation*}
     \begin{align*}
     \lru(z) 
     &= \sum_{i=1}^n c_{\lru}(i) = \sum_{j=1}^m \lru(P(j)) 
@@ -247,7 +218,6 @@ Finalmente, provamos que a \(\lru\) atinge a melhor competitivade para algoritmo
     \\
     &= \lru(P(1)) + (m-1)k \le k + (m-1)k = mk.
     \end{align*}
-  \end{equation}
 
   Logo, para toda entrada \(z\) de tamanho \(n\), \(\frac{\lru(z)}{\opt(z)} \le k\), e juntamento com o \Cref{teo:cota_det} segue o teorema.
 \end{proof}

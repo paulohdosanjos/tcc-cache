@@ -1,4 +1,4 @@
-\chapter{Introdução} 
+\chapter{Introdução e preliminares} 
 
 % Talvez falte algo inicial sobre o tema de fato do trabalho, que é algoritmos com predições (estudo de caso: problema de caching). Talvez só o resumo mesmo.... 
 
@@ -30,4 +30,73 @@ Então, com os algoritmos aumentados, buscamos obter o melhor dos dois mundos: u
 % Marker, resultados quantitativos de competitividade
 
 \textbf{O objetivo deste trabalho é fornecer a estudantes e pesquisadores um primeiro passo na literatura recente de algortimos de predições. Com enfoque no problema clássico de caching, apresentamos os conceitos teóricos base e discutimos os principais resultados e algoritmos.}
+
+\section{Notação e preliminares}
+
+Nessa seção coletamos as notações básicas que serão usadas ao longo do texto. O leitor pode dispensar essa seção e usar como referência quando necessário.
+
+Ao longo do texto, usaremos \textbf{negrito} para definições formais e \textit{itálico} para definições informais ou simplesmente para ênfase.
+
+\subsection{Sequências}
+
+Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{n = 0}^\infty X^n\) e definimos as \textbf{sequências} como sendo os elementos de~\(\Seq(X)\). Seja \(T \in \Naturals\) e seja \(X\) um conjunto não vazio. Ao longo do texto, manteremos a convenção de usar letras em negrito para sequências e, para denotar os elementos da sequência, usamos a letra sem negrito com um índice, onde o índice pode ser um subscrito ou estar entre colchetes após a letra. Formalmente, para qualquer \(\boldx \in X^T \subseteq \Seq(X)\) (ou seja, uma sequência de elementos de \(X\) de tamanho \(T\)), definimos \(x_i = x[i] \coloneqq \boldx_i\) para cada \(i \in [T]\). Além disso, usamos colchetes angulares para escrever sequências por extenso, ou seja, para todo \(\boldx \in X^T\) e \(i,j \in [T]\) com \(i \leq j\), temos que \(\angb{x_i, \dotsc, x_j}\) denota a sequência cujos \(j - i + 1\) elementos são, em ordem\footnote{Note   que, pela definição de sequência, os índices dos elementos de   \(\angb{x_i, \dotsc, x_j}\) variam de \(1\) a \(j - i +   1\). Portanto, para qualquer \(k \in \iinterval{1}{j - i + 1}\), o   \(k\)-ésimo elemento de \(\angb{x_i, \dotsc, x_j}\) é   \(x_{i + k - 1}\). }, \(x_i, x_{i+1}, \dotsc, x_{j}\). Finalmente,~\(\angb{}\) denota a sequência vazia, e para qualquer \(\boldx \in X^T\) e \(i,j \in \Integers\) tal que \(j < i\) ou \(j < 0\), definimos \(\angb{x_i, \dotsc, x_j} \coloneqq \angb{}\). Nós também denotamos por \(\boldx_{i:j}\) a sequência \(\angb{x_i, \dotsc, x_j}\) para qualquer \(\boldx \in \Seq(X)\) e~\(i,j \in \Integers\). A maior parte da notação para sequências está listada na \Cref{tbl:seq_notation}.
+
+\bgroup
+	\renewcommand{\arraystretch}{1.2}
+	\begin{table}[htbp]
+	  \caption{Notação básica}
+          \label{tbl:notation}
+	  \centering
+	  \begin{tabular}{r c p{13cm}}
+	    \toprule
+            \(\ind{P}\) & \(\coloneqq\)& \(1\) se o predicado \(P\) for verdadeiro, e zero caso contrário \\
+            \([n]\)
+            & \(\coloneqq\)
+            & \(\{1, \dotsc, n\}\) para cada \(n
+              \in \Naturals\)\\
+            \(\binom{X}{n}\) & \(\coloneqq\)& o conjunto de todos os subconjuntos de \(X\) de tamanho \(n\) para cada \(n \in [|X|]\) \\
+            \(X + y\) & \(\coloneqq\)& \(X \cup \{y\}\) dado que \(X\subseteq U\) e \(y \in U\) \\
+            \(X - y\) & \(\coloneqq\)& \(X \setminus \{y\}\) dado que \(X\subseteq U\) e \(y \in U\)\\
+            \bottomrule
+	  \end{tabular}
+	\end{table}
+\egroup
+
+\bgroup
+	\renewcommand{\arraystretch}{1.2}
+	\begin{table}[htbp]
+	  \caption{Notação para sequências}
+          \label{tbl:seq_notation}
+	  \centering
+	  \begin{tabular}{r c p{13cm}}
+	    \toprule
+            \(X^*\)
+            &\(\coloneqq\)
+            & \(\bigcup_{n = 0}^\infty X^n\)\\
+            \(x[i]\)
+            & \(\coloneqq\)
+            & o i-ésimo elemento da sequência \(x\) \\
+            \(\emptyseq\)
+            & \(\coloneqq\)
+            & a sequência vazia\\
+            \(\angb{x_1, \dotsc, x_t}\)
+            & \(\coloneqq\)
+            & a sequência de tamanho \(t\) em que o \(k\)-th
+              elemento é \(x_k\) para cada \(k \in [t]\) \\
+            \(\angb{x_i, \dotsc, x_j}\)
+            & \(\coloneqq\)
+            & \(\emptyseq\) se \(i > j\), a sequência em que o \(k\)-th elemento
+              é \(x_{i + k -1}\) para cada \(k \in [j - i + 1]\)
+              caso contrário\\
+            \(\boldx_{i:j}\)
+            & \(\coloneqq\)
+            & \(\angb{x_i, \dotsc, x_j}\)\\
+            \(x[i:j]\)
+            & \(\coloneqq\)
+            & \(\boldx_{i:j}\) \\
+            \bottomrule
+	  \end{tabular}
+	\end{table}
+\egroup
+
 
