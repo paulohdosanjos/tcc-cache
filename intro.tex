@@ -38,8 +38,11 @@ Nessa seção coletamos as notações básicas que serão usadas ao longo do tex
 Ao longo do texto, usaremos \textbf{negrito} para definições formais e \textit{itálico} para definições informais ou simplesmente para ênfase.
 
 \subsection{Sequências}
+\label{sec:seq}
 
-Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{n = 0}^\infty X^n\) e definimos as \textbf{sequências} como sendo os elementos de~\(\Seq(X)\). Seja \(T \in \Naturals\) e seja \(X\) um conjunto não vazio. Ao longo do texto, manteremos a convenção de usar letras em negrito para sequências e, para denotar os elementos da sequência, usamos a letra sem negrito com um índice, onde o índice pode ser um subscrito ou estar entre colchetes após a letra. Formalmente, para qualquer \(\boldx \in X^T \subseteq \Seq(X)\) (ou seja, uma sequência de elementos de \(X\) de tamanho \(T\)), definimos \(x_i = x[i] \coloneqq \boldx_i\) para cada \(i \in [T]\). Além disso, usamos colchetes angulares para escrever sequências por extenso, ou seja, para todo \(\boldx \in X^T\) e \(i,j \in [T]\) com \(i \leq j\), temos que \(\angb{x_i, \dotsc, x_j}\) denota a sequência cujos \(j - i + 1\) elementos são, em ordem\footnote{Note   que, pela definição de sequência, os índices dos elementos de   \(\angb{x_i, \dotsc, x_j}\) variam de \(1\) a \(j - i +   1\). Portanto, para qualquer \(k \in \iinterval{1}{j - i + 1}\), o   \(k\)-ésimo elemento de \(\angb{x_i, \dotsc, x_j}\) é   \(x_{i + k - 1}\). }, \(x_i, x_{i+1}, \dotsc, x_{j}\). Finalmente,~\(\angb{}\) denota a sequência vazia, e para qualquer \(\boldx \in X^T\) e \(i,j \in \Integers\) tal que \(j < i\) ou \(j < 0\), definimos \(\angb{x_i, \dotsc, x_j} \coloneqq \angb{}\). Nós também denotamos por \(\boldx_{i:j}\) a sequência \(\angb{x_i, \dotsc, x_j}\) para qualquer \(\boldx \in \Seq(X)\) e~\(i,j \in \Integers\). A maior parte da notação para sequências está listada na \Cref{tbl:seq_notation}.
+Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{n = 0}^\infty X^n\) e definimos as \textbf{sequências} como sendo os elementos de~\(\Seq(X)\). Seja \(T \in \Naturals\) e seja \(X\) um conjunto não vazio. Ao longo do texto, manteremos a convenção de usar letras em negrito para sequências e, para denotar os elementos da sequência, usamos a letra sem negrito com um índice. Formalmente, para qualquer \(\boldx \in X^T \subseteq \Seq(X)\) (ou seja, uma sequência de elementos de \(X\) de tamanho \(T\): \(|\boldx| = T)\), definimos \(x_i \coloneqq \boldx_i\) para cada \(i \in [T]\). Além disso, usamos colchetes angulares para escrever sequências por extenso, ou seja, para todo \(\boldx \in X^T\) e \(i,j \in [T]\) com \(i \leq j\), temos que \(\angb{x_i, \dotsc, x_j}\) denota a sequência cujos \(j - i + 1\) elementos são, em ordem\footnote{Note   que, pela definição de sequência, os índices dos elementos de   \(\angb{x_i, \dotsc, x_j}\) variam de \(1\) a \(j - i +   1\). Portanto, para qualquer \(k \in \iinterval{1}{j - i + 1}\), o   \(k\)-ésimo elemento de \(\angb{x_i, \dotsc, x_j}\) é   \(x_{i + k - 1}\). }, \(x_i, x_{i+1}, \dotsc, x_{j}\). Finalmente,~\(\angb{}\) denota a sequência vazia, e para qualquer \(\boldx \in X^T\) e \(i,j \in \Integers\) tal que \(j < i\) ou \(j < 0\), definimos \(\angb{x_i, \dotsc, x_j} \coloneqq \angb{}\). Nós também denotamos por \(\boldx_{i:j}\) a sequência \(\angb{x_i, \dotsc, x_j}\) para qualquer \(\boldx \in \Seq(X)\) e~\(i,j \in \Integers\). Escrevemos que um elemento \(a \in \boldx\) se existe \(i \in [n]\) tal que \(a = x_i\).
+
+Será útil introduzir mais uma noção para sequências. Sejam \(\boldx \in X^T \subseteq \Seq(X)\) e \(\boldl \in \Naturals^m \subseteq \Seq(\Naturals)\) uma sequência de índices de tamanho \(m\) tal que \(1 = l_1 \le l_2 \le \dotsc \le l_{m-1} \le l_{m} = T\). Definimos a \textbf{partição contígua} de \(\boldx\) \textbf{determinada} por \(\boldl\) como a sequência de \textbf{blocos contíguos} \(\boldb \in \Seq(X)^m\) em que \(b_i = x_{l_i:l_{i+1}-1}\), \(i \in [1,m-1]\) e \(b_m = x_{l_m:T}\). Intuitivamente, \(\boldl\) indica os índices de início de cada bloco e \(\boldb\) é o conjunto de blocos consecutivos resultantes. A concatenação de todos os blocos reconstrói a sequência original. Assim, se \(\boldx = \angb{x_1, x_2, x_3, x_4, x_5, x_6}\) e \(\boldl = \angb{1,4,5}\) A partição contígua de \(\boldx\) determinada por \(\boldl\) é \(\boldb = \angb{\angb{x_1, x_2, x_3}, \angb{x_4, x_5}, \angb{x_6}}\). A maior parte da notação para sequências está listada na \Cref{tbl:seq_notation}.
 
 \bgroup
 	\renewcommand{\arraystretch}{1.2}
@@ -50,10 +53,6 @@ Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{
 	  \begin{tabular}{r c p{13cm}}
 	    \toprule
             \(\ind{P}\) & \(\coloneqq\)& \(1\) se o predicado \(P\) for verdadeiro, e zero caso contrário \\
-            \([n]\)
-            & \(\coloneqq\)
-            & \(\{1, \dotsc, n\}\) para cada \(n
-              \in \Naturals\)\\
             \(\binom{X}{n}\) & \(\coloneqq\)& o conjunto de todos os subconjuntos de \(X\) de tamanho \(n\) para cada \(n \in [|X|]\) \\
             \(X^Y\) & \(\coloneqq\)& o conjunto das funções com domínio \(Y\)
                                      e contra domínio \(X\)\\
@@ -67,6 +66,26 @@ Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{
 \bgroup
 	\renewcommand{\arraystretch}{1.2}
 	\begin{table}[htbp]
+	  \caption{Conjuntos frequentemente usados}
+          \label{tbl:known_setsnotation}
+	  \centering
+	  \begin{tabular}{r c p{13cm}}
+	    \toprule
+            \([n]\)
+            & \(\coloneqq\)
+            & \(\{1, \dotsc, n\}\) para cada \(n
+              \in \Naturals\)\\
+              \(\mathbb{N}_0\)
+            & \(\coloneqq\)
+            & \(\Naturals \cup \{0\}\) \\
+            \bottomrule
+	  \end{tabular}
+	\end{table}
+\egroup
+%
+\bgroup
+	\renewcommand{\arraystretch}{1.3}
+	\begin{table}[htbp]
 	  \caption{Notação para sequências}
           \label{tbl:seq_notation}
 	  \centering
@@ -75,9 +94,9 @@ Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{
             \(X^*\)
             &\(\coloneqq\)
             & \(\bigcup_{n = 0}^\infty X^n\)\\
-            \(x[i]\)
+            \(|\boldx|\)
             & \(\coloneqq\)
-            & o i-ésimo elemento da sequência \(x\) \\
+            & o tamanho da sequência \(\boldx\)\\
             \(\emptyseq\)
             & \(\coloneqq\)
             & a sequência vazia\\
@@ -102,3 +121,127 @@ Para qualquer conjunto não vazio \(X\), definimos \(\Seq(X) \coloneqq \bigcup_{
 \egroup
 
 
+\subsection{Probabilidade}
+
+Sejam \(X\) e \(Y\) variáveis aleatórias quaisquer. Temos que,
+
+\begin{equation}
+  \label{eq:linearidade}
+  \Expect[X + Y] = \Expect[X] + \Expect[Y]
+\end{equation}
+
+Se \(X\) e \(Y\) são independentes, então,
+\begin{equation}
+  \label{eq:inde}
+  \Expect[X.Y] = \Expect[X]\Expect[Y]
+\end{equation}
+
+Para uma variável aleatória discreta \( X \ge 0 \), vale a identidade
+\begin{equation}
+  \label{eq:va_positiva}
+\Expect[X] = \sum_{k=1}^{\infty} \Pr(X \ge k),
+\end{equation}
+
+Sejam \(\Xcal\) universo finito e não vazio e \(X\) uma variável aleatória tal que \(\forall x \in \Xcal \ , Pr(X = x) = \frac{1}{|S|}\) . Dizemos, então, que \(X\) tem \textbf{distribuição uniforme sobre} \(Y\) e denotamos isso por \(X \sim \mathrm{Unif}(Y)\).
+
+Seja \(\boldX\) uma sequência de variáveis aleatórias independentes, tais que $\Pr(X_i = 1) = p$ e $\Pr(X_i = 0) = 1 - p$, com $p \in (0,1)$. Defina \(T = \min \{ i \in \Naturals : X_i = 1 \}\). Dizemos, então, que $T$ tem \textbf{distribuição geométrica} com parâmetro $p$ e denotamo isso com \(T \sim \mathrm{Geom}(p)\). A função de probabilidade de $T$ é dada por \(\Pr(T = k) = (1 - p)^{k - 1} p\) \(\quad k = 1, 2, \dots\).
+
+\begin{proposition}
+\label{prop:geom}
+Seja \(X\) uma variável aleatória de distribuição geométrica de parâmetro \(p\), então \(\Expect[X] = 1/p\).
+\begin{proof}
+\begin{equation*}
+\Expect[X] = \sum_{k=1}^{\infty} k \Pr(X = k) = p \sum_{k=1}^{\infty} k (1 - p)^{k - 1}.
+\end{equation*}
+Defina \(r \coloneq 1 - p\) e \(S \coloneq \sum_{k=1}^{\infty} k r^{k - 1}\). Então,
+\begin{align*}
+  S
+  &=\sum_{k=1}^{\infty} k r^{k - 1} = \sum_{k=0}^{\infty} (k+1) r^{k} \\
+  &=  r\sum_{k=0}^{\infty} kr^{k-1} + \sum_{k=0}^{\infty} r^{k} \\
+  &= Sr + 1/(1-r).
+\end{align*}
+
+Daí, segue que, \(Sp = \Expect[T] = 1/p\).
+
+\end{proof}
+\end{proposition}
+
+\begin{lemma}[Identidade de Wald]
+  \label{lema:wald}
+  Seja \(\boldX\) uma sequência de variáveis aleatórias reais, não negativas, independentes e identicamente distribuídas. Além disso, seja \(\tau\) uma variável aleatória tomando valores não negativos tal que o evento \(\{\tau \le n\}\) seja independente de \(\{X_i \colon i \ge n\}\) para qualquer \(n \ge 0\). Então,
+  \begin{equation*}
+    \Expect\left[\sum_{i=1}^\tau X_i \right ] = \Expect[\tau].\Expect[X_1]
+  \end{equation*}
+  \begin{proof}
+    Temos que,
+\begin{align*}
+  \Expect \left[ \sum_{i=1}^{\tau} X_i \right]
+  &= \Expect \left[ \sum_{i=1}^{\infty} X_i \ind{\tau \ge i} \right] \\
+  \stackrel{\eqref{eq:linearidade}}{=}&
+   \sum_{i=1}^{\infty} \Expect \left[ X_i \ind{\tau \ge i} \right] \\
+  \stackrel{\eqref{eq:inde}}{=}&
+   \Expect[X_1] \sum_{i=1}^{\infty} \Pr[\tau \ge i] \\
+  \stackrel{\eqref{eq:va_positiva}}{=}&
+   \Expect[X_1] \cdot \Expect[\tau]
+\end{align*}
+  \end{proof}
+\end{lemma}
+
+\begin{theorem}[Coletor de cupons]
+  \label{teo:cupon}
+  Sejam \(X\) um universo abstrato de \(n\) elementos e \(\boldZ\) uma sequência de variáveis aleatórias independentes tal que \(X_i\) é tomado uniformemente em \(U\). Defina,
+  \begin{equation*}
+    L = \inf\{T \colon x \in \boldZ_{1:T} \quad \forall x \in X\}.
+  \end{equation*}
+  Então, temos que, \(\Expect[L] = nH_n\), onde \(H_i = \sum_{j=1}^i 1/j\) é o i-ésimo número harmônico. Esse resultado é conhecido como \emph{teorema do colecionador de cupons} e se refere ao seguinte problema abstrato: se cada caixa de uma marca de cereais contém um cupom e existem \(n\) tipos diferentes de cupons,  dados os \(n\) cupons, quantos cupons você espera que precise remover com substituição antes de remover cada um dos cupons pelo menos uma vez?
+
+  \begin{proof}
+    Defina a sequência \(\boldl \in \Seq(\Naturals)^n\) tal que \(l_i\) é o tempo que decorreu entre o momento em que \(i-1\) cupons foram coletadas e \(i\) cupons foram coletados. A probabilidade \(p_i\) de um novo cupon ser coletado após \(i-1\) terem sidos coletados é \(\frac{n-i+1}{n}\). Logo, \(l_i \sim \mathrm{Geom}(p_i)\) e, pela \Cref{prop:geom} valor esperado \(1/p_i\). Como \(L = \sum_{i=1}^n l_i\), segue que,
+    \begin{align*}
+      \Expect[L] = \Expect\left[\sum_{i=1}^n l_i\right]
+      \stackrel{\eqref{eq:linearidade}}{=}&
+      \sum_{i=1}^n \Expect[l_i] = \sum_{i=1}^n \frac{n}{n-i+1} = nH_n
+    \end{align*}
+  \end{proof}
+
+\end{theorem}
+
+\begin{theorem}[Princípio de Minimax]
+  \label{teo:minimax}
+ Sejam \(X\) uma variável aleatória tomando valores em \(\Xcal\) e \(Y\) tomando valores em \(\Ycal\), então,
+ \begin{equation*}
+    \max_{x \in \Xcal} \Expect[c(\Acal,x)] = \min_{A \in \Acal} \Expect[c(a,X)]
+  \end{equation*}
+  \begin{proof}
+\begin{proof}
+Primeiro, escrevemos as esperanças como somas sobre todos os possíveis valores de \(X\) e \(A\):
+\begin{equation*}
+\Expect[c(A, x)] = \sum_{a \in \mathcal{A}} \Pr[A = a]\, c(a, x)
+\quad \text{e} \quad
+\Expect[c(a, X)] = \sum_{x \in \mathcal{X}} \Pr[X = x]\, c(a, x).
+\end{equation*}
+
+Sabemos que a média ponderada de uma sequência é sempre limitada superiormente pelo seu valor máximo.  
+No nosso caso, os pesos são \(\Pr[X = x]\).  
+Como \(\sum_{x \in \mathcal{X}} \Pr[X = x] = 1\), temos:
+\begin{equation*}
+\max_{x \in \mathcal{X}} \Expect[c(A, x)]
+= \max_{x \in \mathcal{X}} \sum_{a \in \mathcal{A}} \Pr[A = a]\, c(a, x)
+\ge \sum_{x \in \mathcal{X}} \Pr[X = x] \sum_{a \in \mathcal{A}} \Pr[A = a]\, c(a, x).
+\end{equation*}
+
+Podemos agora reordenar as somas e obter:
+\begin{equation*}
+\sum_{x \in \mathcal{X}} \Pr[X = x] \sum_{a \in \mathcal{A}} \Pr[A = a]\, c(a, x)
+= \sum_{a \in \mathcal{A}} \Pr[A = a] \sum_{x \in \mathcal{X}} \Pr[X = x]\, c(a, x).
+\end{equation*}
+
+Finalmente, usando que \(\sum_{a \in \mathcal{A}} \Pr[A = a] = 1\), obtemos:
+\begin{equation*}
+\sum_{a \in \mathcal{A}} \Pr[A = a] \sum_{x \in \mathcal{X}} \Pr[X = x]\, c(a, x)
+\ge \min_{a \in \mathcal{A}} \sum_{x \in \mathcal{X}} \Pr[X = x]\, c(a, x)
+= \min_{a \in \mathcal{A}} \Expect[c(a, X)].
+\end{equation*}
+\end{proof}
+  \end{proof}
+\end{theorem}
