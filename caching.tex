@@ -80,6 +80,7 @@ Sempre que o contexto permitir, usaremos a notação \(c(\Acal, \boldz_{j:k}) \c
 \end{equation*}
 
 \begin{definition}
+  \label{def:blocos}
 Definimos a função \(\theta : [n] \times \Zcal \to \mathbb{N}_0\) que associa a cada posição \(j \in [n]\) e elemento \(x \in \Zcal\) o instante da última ocorrência de \(x\) antes de \(j\), por
 \begin{equation}
 \theta(j, x) =
@@ -207,7 +208,10 @@ Finalmente, provamos que a \(\lru\) atinge a melhor competitivade para algoritmo
 \end{theorem}
 
 \begin{proof}
-  Seja \(\boldz \in \Zcal^n\) uma entrada qualquer e considere uma partição de blocos de \(k\) falhas de \(\lru\). Pelo \Cref{lem:k-part}, o último elemento de um bloco \(b_j\) junto com os elementos do bloco seguinte contém ao menos \(k+1\) páginas distintas e o algoritmo offline, portanto, não poderá processar esses elementos sem falhar ao menos uma vez. Como isso vale para qualquer par de blocos consecutivos \(\opt(z) \ge m-1\). Por outro lado,
+  Seja \(\boldz \in \Zcal^n\) uma entrada qualquer e considere uma partição de blocos de \(k\) falhas de \(\lru\). Pela \Cref{def:blocos}, dois blocos consecutivos envolvem ao menos \(k+1\) páginas distintas, caso contrário formariam apenas um bloco. Pelo princípio da casa dos pombos, o algoritmo offline, portanto, não poderá processar esses elementos sem falhar ao menos uma vez. Como isso vale para qualquer par de blocos consecutivos \(\opt(z) \ge m-1\). 
+
+  Após uma falha de cache, \(\lru\) remove a 
+
     \begin{align*}
     \lru(z) 
     &= \sum_{j=1}^m c(\lru,b_j) 
@@ -264,46 +268,60 @@ onde a ultima igualdade segue pelo \Cref{teo:cupon}.
 
 \subsection{Algortimos de marcação}
 
-Os algoritmos de marcação são uma família de algoritmos de caching que seguem a seguinte estrutura. A execução do algoritmo é em fases, e no começo de cada fase, cada elemento do cache é dito \emph{desmarcado}. Quando um acerto de cache ocorre, o elemento correspondente é \emph{marcado}. Quando uma falha de cache acontece, alguma página desmarcada é descartada do cache, e o novo elemento é colocado no cache e imediatamente marcado. Se todas as páginas do cache estão marcadas e outra falha de cache acontece, então todo o cache é desmarcado e uma nova fase começa. Assim, um \textbf{algoritmo de marcação} é um algoritmo de caching que nunca descarta páginas marcadas, e seu funcionamente é resumido pela forma que escolhe elementos desmarcados para descartas após uma falha de cache.
+Os algoritmos de marcação são uma família de algoritmos de caching que seguem a seguinte estrutura. A execução do algoritmo é em fases, e no começo de cada fase, cada elemento do cache é dito \emph{desmarcado}. Quando um acerto de cache ocorre, o elemento correspondente é \emph{marcado}. Quando uma falha de cache acontece, alguma página desmarcada é descartada do cache, e o novo elemento é colocado no cache e imediatamente marcado. Se todas as páginas do cache estão marcadas e outra falha de cache acontece, então todo o cache é desmarcado e uma nova fase começa. Assim, um \textbf{algoritmo de marcação} é um algoritmo de caching que nunca descarta páginas marcadas, e seu funcionamente é resumido pela forma que escolhe páginas desmarcadas para descartar após uma falha de cache. 
+
+Pela definição informal dada acima, fica claro que o algoritmo opera em blocos de \(k\) páginas distintas e o conjunto de páginas marcadas a cada passo é \(M_i\) (veja \Cref{def:blocos}).  Um algoritmo online de caching \(\Acal\) é chamado de \textbf{algoritmo de marcação} se sua política \(\pi\) só escolhe elementos desmarcados:
+\begin{equation*}
+\pi(\angb{s_1, \dotsc, s_{i}}, \angb{z_1, \dotsc, z_{i-1}}) \in (s_i \setminus M_i).
+\end{equation*}
+
+Abaixo, definimos noções úteis para a análise de algoritmos de marcação. Fixe \(\boldz \in \Seq(\Zcal)\) e \(\boldb = \boldb(\boldz)\) seu conjunto de blocos nas definições abaixo.
 
 \begin{definition}
-  Um elemento \(z_i\) é chamado de \textbf{novo} para alguma fase \(r\) se apareceu na fase \(r\) mas não na fase \(r-1\). Se apareceu em ambas as fases, é chamado de \textbf{velho}. Uma \textbf{chegada} na fase \(r\) significa que o elemento \(z_i\) não apareceu anteriormente nesta mesma fase.
+  Seja  \(p \in b_r\), chamamos \(p\) de um pedido \textbf{novo} se \(p \notin b_{r-1}\) ou \textbf{velho} se \(p \in b_{r-1}\). A \textbf{chegada} de \(p\) é o passo em que é referenciada pela primeira vez na fase \(r\).
 \end{definition}
+
+Observe que \(p \notin b_{r}\) é equivalente a \(p \notin M_{l_r-1}\), pois \(M_{l_r-1}\) é o conjunto de páginas marcadas no bloco \(r-1\).
+
+Então, em um bloco, cada pedido \(z_i\) ou é velho ou é novo. Se \(z_i\) foi referenciado no bloco anterior, é velho; novo, caso contrário. No último passo \(j\) de um bloco \(r\), as páginas referenciadas durante esse bloco estão todas marcadas e no cache pois após suas chegadas são marcadas e não saem mais, logo, \(M_j = s_j\). A chegada de uma página distinta daqules em \(s_j\) faz zerr \(M\) e começar um novo bloco. Isso para o algoritmo de marcação. Observe que os conjuntos \(M_i\) e consequentemente os blocos \(\boldb\) são independentes do algoritmo em questão e são totalmente determinados dado \(\boldz\).
+
+\begin{fact}
+  \label{fato:nova}
+  Para um algoritmo de marcação, toda chegada de um pedido novo \(z_i\) resulta em uma falha de cache, pois \(z_i \notin M_{r-1} = s_{r-1}\).
+\end{fact}
 
 \begin{lemma}
   \label{lem:opt_nova}
-  Seja \(L\) o número de páginas novas de uma entrada finita \(\boldz \in \Seq(\Zcal)\). Então, \(L/2 \le \opt(\boldz) \le L\).
-  \begin{proof}
+  Seja \(L\) o número total de pedidos novos em \(\boldz\). Então, \(\opt(\boldz) = \Theta(L)\). 
+ \begin{proof} Suponha \(|\boldb| = m > 2\) e denote por \(l_r\) o início do bloco \(b_r\), de modo que, \(b_r = \angb{z_{l_r}, \dotsc, z_{l_{r+1}-1}}\).  
+   Seja \(L_r\) o número de pedidos novos na fase \(r\). Defina a sequência \(\boldd\), de tamanho \(m+1\), por \(d_r = |s_{l_r} - M_{l_r-1}|\) para \(r \in [m]\), isto é, a diferença entre o cache de \(\opt\) no início do bloco \(r\) e o conjunto \(M_{l_r-1}\) das \(k\) páginas referenciadas no bloco anterior. A seguir, usamos a sequência \(\boldd\) para chegar em duas cotas inferiores para o custo \(\opt(b_r)\). 
 
-    Defina as sequências \(\boldd\), \(\boldg\) e \(\boldh\) tais que \(g_i = |s_{j-1} - M_{j-1}|\), \(h_i = |s_{k+1}-M_{k}|\) e \(d_i = g_i - h_i\). Ou seja, ... Note que, \(g_{i+1} = h_i\). Toda página limpa requisitada nesta rodada que não estava em \(S_O\) força uma falha da OPT; assim, OPT tem ao menos \(L - d_I\) falhas. Além disso, \(d_F\) páginas presentes na OPT ao final não estavam no cache da \textsc{Marker} no início da rodada; para carregá-las, OPT teve ao menos \(d_F\) falhas. Portanto
-\begin{equation*} 
-  \opt(b) \ge \max\{L - d_i, d\} \ge \frac{L - d_I + d_F}{2}. 
-\end{equation*} 
-
-  Somando sobre todas os blocos rodadas, os termos \(-d_I\) e \(+d_F\) telescopam (entre final e início de rodadas consecutivas) e contribuem apenas \(O(1)\) no total, concluindo que 
-\begin{equation*} 
-  \opt(\boldz) \ge \frac12 \sum_r L O(1).
+   i) Pela definição de \(d_r\), no passo \(l_r\), \(\opt\) têm no máximo \(d_r\) páginas novas no cache. Em um algoritmo de marcação, esse número seria zero mas \(\opt\) tenta prever alguns dos pedidos novos do bloco atual e por isso já tem alguns deles no cache. Portanto, deixará de fora ao menos \(L_r - d_r\) páginas novas, cada uma delas resulta em uma falha: \(\opt(b_r) \ge L_r - d_r\). ii) Pelo mesmo motivo, no final do bloco, têm no cache \(d_{r+1}\) páginas que não são referenciadas no bloco \(r\). Estas páginas formam, junto com o conjunto \(M_{l_{r+1}-1}\), \(k+d_{r+1}\) páginas distintas que estão no cache (de tamanho \(k\)) em pelo menos um passo do bloco \(r\). Pelo princípio da casa dos pombos, então, há de haver ao menos \(k+d_{r+1}-k = d_{r+1}\) trocas durante o bloco, isto é, \(\opt(b_r) \ge d_{r+1}\). Assim,  
+\begin{equation*}
+  \opt(b_r) \ge \max\{L_r - d_r, d_{r+1}\} \ge \frac{L_r - d_r + d_{r+1}}{2},
 \end{equation*}
-
+onde a segunda desigualdade usa o fato de que, para quaisquer \(a,b \in \Reals\), \(\max(a,b) \ge \frac{a+b}{2}\). Somando sobre todos os blocos:
+\begin{equation*}
+  \opt(\boldz)
+    = \sum_{r=1}^m \opt(b_r)
+    \ge \frac{1}{2} \sum_{r=1}^m L_r + \frac{1}{2}\sum_{r=1}^m (d_{r+1} - d_r)
+    = \frac{L}{2} + d_{m+1} - d_{m-1} + d_1
+    = \frac{L}{2} + O(k),
+\end{equation*}
+pois a segunda soma telescopa e \(d_i \le k\). FALTA A OUTRA DIREÇÂO.
 \end{proof}
 \end{lemma}
 
-\begin{lemma}
-  \label{lem:nova}
-  Toda página nova incorre uma falha de cache.
-  \begin{proof}
-  \end{proof}
-\end{lemma}
-
+\begin{definition}[Algoritmo \textbf{Marker}]
 O algoritmo de marcação mais simples é o que escolhe uniformemente um elemento desmarcado para sair do cache. Denotamos esse algoritmo \textbf{Marker} por \(\Acal_{\mathbf{MK}}\). Formalmente,  
 \begin{equation*}
 \pi_{\mathbf{MK}}(\angb{s_1, \dotsc, s_{i}}, \angb{z_1, \dotsc, z_{i-1}}) \sim \mathrm{Unif}(s_i \setminus M_i).
 \end{equation*}
+\end{definition}
 
 \begin{theorem}[Competitividade de \(\Acal_{\mathbf{MK}}\)] O algoritmo \(\Acal_{\mathbf{MK}}\) atinge competitivade \(2H_k\), isto é, \(\Rcal(\Acal_{\mathbf{MK}}) \le 2H_k\).
 \begin{proof}
-  Sejam \(\boldz \in \Seq(\Zcal)\) e \(b_j\) um elemento qualquer de \(\boldb(z)\), isto é, um bloco qualquer da entrada. Além disso, suponha que essa fase teve \(L\) páginas novas. Pelo \Cref{lem:nova}, estas \(L\) páginas incorrem \(L\) faltas.
-
+  Seja \(\boldz \in \Seq(\Zcal)\) e \(b_j\) um bloco qualquer de \(\boldz\). Durante o bloco, há dois Além disso, suponha que essa fase teve \(L\) páginas novas. Pelo \Cref{lem:nova}, estas \(L\) páginas incorrem \(L\) faltas.
   Para as novas, ordene as \(k-L\) chegadas por ordem de aparição \(j=1,\dots,k-c_r\). No passo da \(j\)-ésima tal requisição, existem exatamente \(k-j+1\) páginas ainda não substituídas desde o início da rodada, das quais \(L\) são limpas (já trazidas e marcadas) e \(k-L-(j-1)\) são obsoletas ainda presentes. Como \(\Acal_{\mathbf{MK}}\) sempre descarta uniformemente entre as não marcadas, a probabilidade de falha nessa \(j\)-ésima requisição velha é no máximo 
 \begin{equation*}
 \frac{c_r}{\,k-j+1\,}.
@@ -323,6 +341,11 @@ L \;+\; L(H_k - H_{L-1}) \;\le\; L H_k.
 \end{equation*}
 
 Do \Cref{lem:opt_nova}, segue o teorema.
-
-  \end{proof}
+\end{proof}
 \end{theorem}
+
+\textcite{Dimitris00} mostrou a razão competitiva exata: \(\Rcal(\Acal_{\mathbf{MK}}) = 2H_{k}-1\).
+
+\section{Comentários finais}
+
+MOTIVAÇÂO PARA ALGORITMOS COM PREDIÇÔES E O QUE FOI FEITO NA LITERATURA
