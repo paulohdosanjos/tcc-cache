@@ -1,0 +1,79 @@
+\newlength{\claimmargin}        % left and right margins for claimeq
+\setlength{\claimmargin}{5ex}
+\newlength{\rmlistmargin}       % left margin for rmlist
+\setlength{\rmlistmargin}{10ex}
+
+% multiple-line claim in equation format
+\newenvironment{claimeq}
+{%
+  \refstepcounter{equation}%
+  \begin{list}
+    {%
+\hspace*{\textwidth}%    %% move all the way to the right
+\hspace*{-\claimmargin}% %% move a bit back to the left
+\hfill%                  %% add a glue
+\textup{(\theequation)}% %% write equation tag
+\hspace*{\claimmargin}%  %% move to the right again
+\hspace*{-\textwidth}}%  %% then back to where we started
+    {
+      \setlength{\topsep}{0pt}
+      \setlength{\leftmargin}{\claimmargin}
+      \setlength{\rightmargin}{\claimmargin}
+      \setlength{\labelsep}{0cm}
+      \setlength{\labelwidth}{\claimmargin}
+    }%
+  \item%
+  }%
+  {%
+  \end{list}%
+}
+
+% claim proof environment
+\newenvironment{claimproof}[1][]{
+  \proof[Proof of Claim \theclaim#1]
+  \renewcommand{\qedsymbol}
+               {\textit{End of the proof of Claim \theclaim}#1.}
+}
+{\endproof}
+
+\newcounter{rmlist}
+\renewcommand{\thermlist}{\roman{rmlist}}
+
+% Roman list
+\newenvironment{rmlist*}[1][]
+{%
+  \begin{list}
+    {\textup{(\thermlist)}}
+    {
+      \setlength{\topsep}{2pt}
+      \setlength{\leftmargin}{\rmlistmargin}
+      \setlength{\labelsep}{0cm}
+      \setlength{\labelwidth}{\rmlistmargin}
+      \setlength{\itemsep}{2pt}
+      \ifthenelse{\equal{#1}{}}
+      {}
+      {\setlength{\leftmargin}{#1}}
+      \setlength{\labelsep}{1ex}
+      \usecounter{rmlist}
+    }%
+  }%
+  {%
+  \end{list}%
+}
+
+% Numbered Roman list
+\newenvironment{rmlist}[1][]
+  {%
+   \begin{claimeq}%
+     \ifthenelse{\equal{#1}{}}%
+       {}%
+       {\label{#1}}%
+     \begin{rmlist*}[1ex]%
+  }%
+  {%
+     \end{rmlist*}%
+   \end{claimeq}%
+  }
+
+% reference to roman item inside numbered list
+\newcommand{\rmlisteqref}[2]{\eqref{#1}\eqref{#2}}

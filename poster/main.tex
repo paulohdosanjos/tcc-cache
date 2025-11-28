@@ -1,0 +1,164 @@
+\documentclass[20pt, a1paper, portrait]{tikzposter}
+\usepackage[a1paper]{geometry}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{decorated}
+\usepackage{notation}
+\usepackage{theorems}
+\usepackage{cmbright}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+
+\usetikzlibrary{positioning}
+
+\definecolor{darkblue}{RGB}{0, 76, 153}
+\definecolor{lightred}{RGB}{255, 255, 153}
+\definecolor{yelloworange}{RGB}{255, 128, 0}
+\definecolor{yellowgreen}{RGB}{76, 153, 0}
+\definecolor{darkpurple}{RGB}{153, 0, 153}
+\definecolor{darkpink}{RGB}{255, 0, 255}
+\definecolor{lightred}{RGB}{255, 102, 102}
+\definecolor{lightblue}{RGB}{51, 153, 255}
+\definecolor{darkerpurple}{RGB}{102, 0, 204}
+
+
+\colorlet{titlebgcolor}{darkblue}
+\colorlet{titlefgcolor}{white}
+
+\colorlet{backgroundcolor}{white}
+\colorlet{blocktitlebgcolor}{lightgray}
+\colorlet{blocktitlefgcolor}{darkblue}
+
+\colorlet{innerblockbodybgcolor}{white}
+\colorlet{innerblocktitlebgcolor}{darkblue}
+\colorlet{innerblocktitlefgcolor}{white}
+
+\colorlet{notebgcolor}{lightred}
+\colorlet{noteframecolor}{lightred}
+
+\usetitlestyle{Filled}
+\usenotestyle{Sticky}
+
+\begin{document}
+
+\title{\textbf{\parbox{\linewidth}{\centering{%
+    Algoritmos com predições para caching  }}}}
+%
+\author{%
+  Paulo Henrique dos Anjos\\
+  Orientador: Victor Sanches Portella}
+%
+\maketitle
+
+\node [below right=3cm and 1.5cm] at (bottomleft |- topright) {
+    \includegraphics[scale=.08]{images/IME.png}
+};
+
+
+\begin{columns}
+
+\column{0.5}
+
+\block[titleinnersep=.5cm]{E se um algoritmo online for equipado com um preditor de aprendizado?}{
+
+TIRAR TODA ESSA PRIMEIRA PARTE
+
+Na análise de algoritmos clássicos, frequentemente usa-se a análise de pior caso para se chegar em
+garantias teóricas fortes de desempenho, independentes da entrada. No entanto, em geral, o pior
+caso aparece com pouca frequência na prática - sacrificamos uma possível melhora no algoritmo
+por garantias téoricas que não chegam a ser "alcançadas". Mais normalmente, os dados de entrada
+possuem algum tipo de estrutura que pode ser explorada. Uma predição sobre essa estrutura, que
+pode ser gerada, por exemplo, por um modelo de aprendizado de máquina, pode entrar em jogo
+no algoritmo, melhorando o desempenho sem prescindir de garantias téoricas, possivelmente mais
+fracas porém mais realistas. Essa é a premissa básica da recém-nascida área de algoritmos com
+predições. O objetivo desse estudo é estudar as principais ideias e resultados dessa área, usando o
+problema de caching (paginação online).\vspace{.5cm}
+
+\innerblock[titleleft]{Problema de caching}{
+ O problema de caching considera um sistema com dois níveis de memória: uma memória rápida ou
+cache de tamanho k e uma memória lenta de tamanho m ≫ k. Uma sequência de itens (páginas),
+é fornecida como entrada ao algoritmo de caching e deve ser processada em ordem. Se a página
+referenciada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um acerto
+de cache; caso contrário, acontece uma falha de cache. Neste caso, o algoritmo traz a página da
+memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página
+no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo
+com uma regra de substituição ou política. O objetivo do problema é encontrar uma política que
+minimize a quantidade total de falhas de cache. Antes de entrarmos no modelos de predições,
+estudaremos o problema tradicional, ou seja, sem predições.
+}
+
+FALAR DOS RESULTADOS CLÁSSICOS LRU E MARKER?
+USAR A INTRODUÇÂO DO WEI COMO BASE
+DESCRIÇÔES VISUAIS DOS ALGORITMOS
+
+0. Framework visual do problema de caching com predições
+1. Robustez e consistência
+
+\innerblock[titleleft]{Definição}{
+ Dizemos que um algoritmo aleatorizado \(\Acal\) para o problema de caching é \(c\)-competitivo se para toda sequência \(z \in \Zcal^*\) existe uma constante \(\alpha\) tal que
+  \begin{equation*}
+    \mathbb{E}[c(\Acal, z)] \le c \opt(z) + \alpha
+  \end{equation*}
+}
+
+1. LRU
+2. Marker
+
+A competitividade do algoritmo \(\lru\) é igual ao tamanho do cache. Isto é, \(\Rcal({\lru}) = k\)
+O algoritmo \(\Acal_{\mathbf{MK}}\) atinge competitivade \(2H_k\), isto é, \(\Rcal(\Acal_{\mathbf{MK}}) \le 2H_k\)
+}
+\vspace{.5cm}
+
+\block[titleinnersep=.5cm]{Algoritmos com predições básicos}{
+  1. Oráclo Cego
+  2. Predictive Marker:
+  \begin{equation*}
+    2 + O\left(\min\left(\sqrt{\frac{\eta}{\OPT}}, \log k\right)\right)
+  \end{equation*}
+\vspace{.5cm}
+}
+
+\column{0.5}
+
+\block[titleinnersep=.65cm]{Algoritmos melhorados}{
+
+\innerblock[titleleft]{Teorema (Lykouris 2019)}{
+  Seja \(\Acal\) um algoritmo \(\alpha\)-robusto e \(\Bcal\) um algoritmo \(\gamma\)-competitivo. É possível criar um algoritmo caixa-preta \(\Ccal\) que é \(9\alpha\)-robusto e \(9-\gamma\)-competitivo.
+}
+  1. Marker Melhorado
+
+  \begin{equation*}
+    O\left(1+ \min\left(\log \frac{\eta}{\OPT}, \log k\right)\right)
+  \end{equation*}
+
+  2. Cota inferior
+
+\innerblock[titleleft]{Teorema (Rohatgi 2020)}{
+  Seja \(\Acal\) um algoritmo aleatorizado para caching com acesso a predições. Para todo \(\epsilon\), o algoritmo atinge competitivade não mais que 
+  \begin{equation*}
+    \Omega\left(\log \min \left(\frac{\epsilon}{k \log k}, k\right)\right)
+  \end{equation*}
+  quando restrito a entradas tais que \(\frac{\eta}{\OPT} \le \epsilon\).
+}
+
+  3. Oráclo Cego Melhorado
+}
+
+\block[titleinnersep=.5cm]{Agradecimentos}{
+  \normalsize
+}
+
+\block[titleinnersep=.5cm]{Referências}{
+\normalsize
+
+  [1] T. Lykouris e S. Vassilvitskii. Competitive Caching with Machine Learned Advice.
+
+  [2] D. Rohatgi. Near-Optimal Bounds for Online Caching with Machine Learned Advice.
+
+  [3] Alexander Wei. Better and Simpler Learning-Augmented Online Caching.
+}
+
+\end{columns}
+
+\end{document}
