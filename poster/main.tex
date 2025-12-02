@@ -1,4 +1,13 @@
-\documentclass[20pt, a1paper, portrait]{tikzposter}
+\documentclass[
+17pt, 
+a1paper, 
+portrait,
+margin=0mm,
+innermargin=5mm,
+blockverticalspace=8mm,
+colspace=4mm
+]{tikzposter}
+
 \usepackage[a1paper]{geometry}
 \usepackage{mathtools}
 \usepackage{amsfonts}
@@ -10,6 +19,7 @@
 \usepackage{hyperref}
 \usepackage[shortlabels]{enumitem}
 \usepackage{bm}
+\usepackage{mathpazo}
 
 \usetikzlibrary{positioning}
 
@@ -22,37 +32,72 @@
 \definecolor{lightred}{RGB}{255, 102, 102}
 \definecolor{lightblue}{RGB}{51, 153, 255}
 \definecolor{darkerpurple}{RGB}{102, 0, 204}
+\definecolor{darkgreen}{RGB}{128,204,128}
 
+
+
+\definecolor{bg}{RGB}{255,252,226}
 
 \colorlet{titlebgcolor}{darkblue}
 \colorlet{titlefgcolor}{white}
 
-\colorlet{backgroundcolor}{white}
-\colorlet{blocktitlebgcolor}{lightgray}
-\colorlet{blocktitlefgcolor}{darkblue}
+\colorlet{blockbodybgcolor}{bg}
 
-\colorlet{innerblockbodybgcolor}{white}
+\colorlet{blocktitlebgcolor}{darkblue}
+\colorlet{blocktitlefgcolor}{white}
+
+\colorlet{innerblockbodybgcolor}{bg}
 \colorlet{innerblocktitlebgcolor}{darkblue}
 \colorlet{innerblocktitlefgcolor}{white}
 
 \colorlet{notebgcolor}{lightred}
 \colorlet{noteframecolor}{lightred}
 
-\usetitlestyle{Filled}
 \usenotestyle{Sticky}
+
+% Estilo Título
+\definetitlestyle{sampletitle}{
+width=\textwidth, roundedcorners=0, linewidth=5pt, innersep=0,
+titletotopverticalspace=0, titletoblockverticalspace=0.5cm
+}{
+\begin{scope}[line width=\titlelinewidth, rounded corners=\titleroundedcorners]
+\draw[color=blocktitlebgcolor, fill=titlebgcolor]
+(\titleposleft,\titleposbottom) rectangle (\titleposright,\titlepostop);
+\end{scope}
+}
+\usetitlestyle{sampletitle}
+
+% Estilo Blocos
+\useblockstyle[
+titleleft,
+roundedcorners=0,
+linewidth=.1cm,
+titleinnersep=.3cm,
+bodyinnersep=.4cm,
+]{Default}
+
+% Estilo Blocos internos
+\useinnerblockstyle[
+titleleft,
+roundedcorners=0,
+linewidth=.1cm,
+titleinnersep=.3cm,
+bodyinnersep=.4cm,
+]{Default}
 
 \begin{document}
 
 \title{\textbf{\parbox{\linewidth}{\centering{%
     Algoritmos com predições para caching  }}}}
-%
+
 \author{%
   Paulo Henrique dos Anjos\\
   Orientador: Victor Sanches Portella}
-%
+
 \maketitle
 
-\node [below right=3cm and 1.5cm] at (bottomleft |- topright) {
+% Figura IME
+\node [below right=1cm and 1.5cm] at (bottomleft |- topright) {
     \includegraphics[scale=.08]{images/IME.png}
 };
 
@@ -61,27 +106,19 @@
 
 \column{0.33}
 
-\block[titleinnersep=.5cm]{Caching tradicional}{
+\block{Caching tradicional}{
 
-\vspace{.5cm}
 
-\begin{minipage}[c]{0.2\textwidth}
+  Um cache de tamanho \(\mathbf{k}\) processa uma sequência de páginas em ordem. Se uma página solicitada não estiver no cache, ocorre uma \textbf{falha de cache} com custo unitário e uma página deve ser descartada e substituída. O objetivo é minimizar o número de falhas.
 
-  \vspace*{.5cm}
-
-  Um cache de tamanho \(\mathbf{k}\) processa uma sequência de páginas em ordem. Se uma página não estiver no cache, ocorre uma \textbf{falha de cache} com custo unitário e uma página do cache deve ser descartada e substituída. O objetivo é minimizar o número de falhas.
-
-\end{minipage}
-\begin{minipage}[c]{0.22\textwidth}
   \begin{tikzfigure}\label{fig3}
     \centering
     \includegraphics[scale=.1]{images/caching.png}
   \end{tikzfigure}
-\end{minipage}%
 
 \vspace*{.5cm}
 
-O custo mínimo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \textcolor{blue}{\textbf{FIF}} (\emph Furthest-in-the-Future), que descarta a página do cache que permanecerá sem pedidos pelo maior tempo no futuro.
+Dada um entrada \(\boldz\), o custo mínimo \(\opt(\boldz)\) é dado pela estratégia (\textbf{offline}) \textcolor{blue}{\textbf{FIF}} (\emph Furthest-in-the-Future), que descarta a página do cache que permanecerá sem pedidos pelo maior tempo no futuro.
 
 
 \begin{center}
@@ -95,8 +132,8 @@ O custo mínimo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \te
   }
 \end{center}
 
-\innerblock[titleleft]{Análise competitiva}{
-  Um algoritmo aleatorizado \(\Acal\) atinge \textcolor{blue}{\textbf{competitivade}} \(\boldalpha\) se para \textbf{toda} sequência de pedidos \(\boldz\) 
+\innerblock{Análise competitiva}{
+  Um algoritmo de caching \(\Acal\) atinge \textcolor{blue}{\textbf{competitivade}} \(\boldalpha\) se para \textbf{toda} sequência de pedidos \(\boldz\) 
   \begin{equation*}
     \frac{\mathbb{E}[\text{\textcolor{red}{Custo}}(\boldz)]}{\opt(\boldz)} \le \boldalpha 
   \end{equation*}
@@ -104,7 +141,7 @@ O custo mínimo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \te
 
 \vspace*{.5cm}
 
-Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais próximo possível de \(1\).
+Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) a mais próxima possível de \(1\).
 
 \begin{center}
   \fcolorbox{darkpurple}{white}{
@@ -112,32 +149,25 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
       \centering
       \vspace{4pt}
       \large \(\boldalpha = \Theta(k)\) para algoritmos \textbf{determinísticos} e
-      \(\boldalpha = \Theta(\log k)\) para algoritmos \textbf{aleatorizados}. Na prática, \textcolor{blue}{\textbf{LRU}} é usado, mas pela teoria \(\boldalpha(\text{\textcolor{blue}{\textbf{LRU}}}) = k\)
+      \(\boldalpha = \Theta(\log k)\) para algoritmos \textbf{aleatorizados}. Na prática, \textcolor{blue}{\textbf{LRU}} é usado, mas é menos competitivo (\(\boldalpha(\text{\textcolor{blue}{\textbf{LRU}}}) = k\)) que os melhores algoritmos aleatorizados disponíveis.
       \vspace{4pt}
     \end{minipage}
   }
 \end{center}
 
-.
+Isso mostra que a análise competitiva de pior caso pode ser pessimista.  
+
 \vspace{.5cm}
 }
 
-\column{0.33}
+\block{E com predições?}{
 
-\block[titleinnersep=.5cm, roundedcorners=0]{E com predições?}{
+  (Lykouris 2018) Um algoritmo clássico pode ser aprimorado com um \textbf{oráculo} que prevê entradas futuras. Em \emph{caching}, o oráculo prevê o passo da \textbf{próxima ocorrência} de uma página.
 
-  \begin{minipage}[c]{0.2\textwidth}
-  \vspace*{.5cm}
-  Um algoritmo clássico pode ser aprimorado com um \textbf{oráculo} que prevê entradas futuras. Em \emph{caching}, o oráculo prevê o \textbf{próximo tempo} que uma página será solicitada.
-\end{minipage}
-
-
-\begin{minipage}[c]{0.22\textwidth}
   \begin{tikzfigure}\label{fig3}
     \centering
-    \includegraphics[scale=.1]{images/caching-pred.png}
+    \includegraphics[scale=.089]{images/caching-pred.png}
   \end{tikzfigure}
-\end{minipage}%
 
 \begin{center}
   \fcolorbox{darkpurple}{white}{
@@ -150,14 +180,14 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
   }
 \end{center}
 
-Buscamos algoritmos:
+Buscamos algoritmos
 
 \begin{itemize}
   \item \textcolor{blue}{\textbf{Consistentes}}: se servido de um oráculo melhor (com erro \(\boldeta\) menor) resulta mais competitivo 
-  \item \textcolor{green}{\textbf{Robustos}}: permanece robusto no pior caso, em que o oráculo é arbitrariamente ruim.
+  \item \textcolor{darkgreen}{\textbf{Robustos}}: permanece robusto no pior caso, em que o oráculo é arbitrariamente ruim.
 \end{itemize}
 
-O algoritmo natural com predições é o \textcolor{blue}{\textbf{OráculoCego}}, que sempre descarta a página prevista a ocorrer mais no futuro ("imitando" a estratégia \textcolor{blue}{\textbf{FIF}}). 
+O algoritmo natural com predições é o \textcolor{blue}{\textbf{OráculoCego}}, que sempre descarta a página prevista a reaparecer mais no futuro ("imitando" a estratégia \textcolor{blue}{\textbf{FIF}}). 
 
 \begin{itemize}
   \item \(\boldalpha(\text{\textcolor{blue}{\textbf{OráculoCego}}}) = \Theta(\frac{\boldeta}{OPT})\)
@@ -171,30 +201,28 @@ Um algoritmo ótimo que ignora todas as previsões do oráculo é robusto mas n�
 
 \column{0.33}
 
-\block[titleinnersep=.65cm]{Algoritmos de marcação}{
+\block{Algoritmos de marcação}{
 
-  A sequência de pedidos \(\boldz\) é separada em \textbf{fases}. 
+  A sequência de pedidos \(\boldz\) é separada em \textbf{fases}. Durante uma fase, 
 
   \begin{itemize}
-    \item Um acerto de cache \textcolor{blue}{marca} a página correspondente
-    \item Após uma falha de cache descarta uma página \textcolor{red}{desmarcada}, traz a página faltante e \textcolor{blue}{marca} ela
-    \item Quando todas páginas do cache estão marcadas, inicia-se uma nova fase com todas as páginas desmarcadas. 
+    \item um acerto de cache \textcolor{blue}{marca} a página correspondente;
+    \item após uma falha de cache, é descartada alguma página \textcolor{red}{desmarcada} e a página faltante é carregada e marcada;
+    \item quando todas as páginas do cache estão marcadas, inicia-se uma nova fase desmarcando todas essas páginas. 
   \end{itemize}
 
   \textbf{Algoritmos de marcação só descartam páginas desmarcadas}: variam apenas na regra de escolha entre as desmarcadas.
 
-\begin{minipage}[c]{0.4\textwidth}
   \begin{tikzfigure}\label{fig3}
     \centering
     \includegraphics[scale=.1]{images/mark.png}
   \end{tikzfigure}
-\end{minipage}%
 
 \vspace{.5cm}
 
   \begin{itemize}
-    \item \textcolor{blue}{\textbf{Marker}}: descarta uniformemente uma página desmarcada do cache. 
-    \item Sem um oráculo, atinge competitivade \(\alpha(\textcolor{blue}{\textbf{Marker}}) = \Theta(\log k)\).
+    \item Algoritmo \textcolor{blue}{\textbf{Marker}}: escolhe uniformemente uma página desmarcada. 
+    \item Sem um oráculo, atinge competitivade \(\boldalpha(\textcolor{blue}{\textbf{Marker}}) = \Theta(\log k)\).
   \end{itemize}
 
 \begin{center}
@@ -202,34 +230,32 @@ Um algoritmo ótimo que ignora todas as previsões do oráculo é robusto mas n�
     \begin{minipage}{0.9\linewidth}
       \centering
       \vspace{4pt}
-      \textbf{\large Lykouris (2019) e Rohatgi(2020) mostram como usar um oráculo para melhorar a competitivade do algoritmo \textcolor{blue}{\textbf{Marker}}}
+      \textbf{\large Lykouris (2018) e Rohatgi (2019) mostraram uma estratégia em que o oráculo é usado para melhorar a competitivade do algoritmo \textcolor{blue}{\textbf{Marker}}}
       \vspace{4pt}
     \end{minipage}
   }
 \end{center}
 
 
-\innerblock[titleleft]{Cadeias de descarte}{
+\innerblock{Cadeias de descarte}{
 
-  \begin{minipage}[c]{0.2\textwidth}
-    \begin{itemize}
-      \item Cada página \textcolor{green}{\textbf{nova}}, ou seja, que não esteve presente na fase anterior, inicia uma \textbf{cadeia de descarte}. Essa página não está no cache e resulta no descarte de uma página \textcolor{red}{\textbf{velha}}, cuja próxima ocorrência resulta em outro descarte e assim por diante, até chegar uma página que não aparece de novo na fase. Essas cadeias "explicam" todas as falhas da fase. 
-      \item O custo total de falhas é a soma dos comprimentos das cadeias.
-    \end{itemize}
-  \end{minipage}%
-  \hfill
-  \begin{minipage}[c]{0.22\textwidth}
+Para projetar e analisar algoritmos de marcação, é útil decompor o conjunto de falhas de cache em \textbf{cadeias de descarte}.
+
+\begin{itemize}
+      \item Cada página \textcolor{darkgreen}{\textbf{nova}}, ou seja, que não esteve presente na fase anterior, inicia uma cadeia de descarte. Essa página não está no cache e resulta no descarte de uma página \textcolor{red}{\textbf{velha}}, cuja próxima ocorrência resulta em outro descarte e assim por diante, até chegar uma página que não aparece de novo na fase. Essas cadeias "explicam" todas as falhas da fase. 
+      \item O custo total é a soma dos comprimentos das cadeias.
+ \end{itemize}
+
     \begin{tikzfigure}\label{fig3}
       \centering
-      \includegraphics[scale=.1]{images/cadeia.png}
+      \includegraphics[scale=.12]{images/cadeia.png}
     \end{tikzfigure}
-  \end{minipage}%
 
 }
 
 \vspace{.5cm}
 
-\textcolor{blue}{\textbf{OráculoMarker}} (Lykouris 2019): 
+\textcolor{blue}{\textbf{OráculoMarker}} (Lykouris 2018): 
 \begin{itemize}
   \item segue o conselho do oráculo no máximo \(\log k\) vezes por cadeia, depois descarta uniformemente até o final da cadeia
   \item \(\boldalpha = 2 + O\left(\min\left(\sqrt{\frac{\boldeta}{\OPT}}, \log k\right)\right)\)
@@ -237,7 +263,7 @@ Um algoritmo ótimo que ignora todas as previsões do oráculo é robusto mas n�
 
 \vspace{.5cm}
 
-\textcolor{blue}{\textbf{OráculoMarkerAprimorado}} (Rohatgi 2021): 
+\textcolor{blue}{\textbf{OráculoMarkerAprimorado}} (Rohatgi 2019): 
   \begin{itemize}
     \item segue o conselho do oráculo apenas uma vez por cadeia, depois descarta uniformemente até o final da cadeia
     \item \(\boldalpha = O\left(1+ \min\left(\log \frac{\boldeta}{\OPT}, \log k\right)\right)\)
@@ -246,45 +272,79 @@ Um algoritmo ótimo que ignora todas as previsões do oráculo é robusto mas n�
 A escolha de ignorar o oráculo após um determinado tempo permite robustez, protegendo o algoritmo contra previsões ruins.
 }
 
-\block[titleinnersep=.65cm]{Algoritmos simplificados (e melhores...)}{
+\column{0.33}
 
-  \innerblock[titleleft]{Combinando algoritmos em caixa-preta. }{
-    \textbf{Teorema (Lykouris 2019)}. Seja \(\Acal\) um algoritmo \(\alpha\)-robusto e \(\Bcal\) um algoritmo \(\gamma\)-competitivo. Existe um algoritmo \(\Ccal\) que é \(9\alpha\)-robusto e \(9\gamma\)-competitivo que combina \(\Acal\) e \(\Bcal\) em "caixa-preta".
+\block{Trocando robustez por consistência, e vice-versa}{
+\textbf{Teorema (Lykouris 2018).} Seja $\boldgamma > 0$. Quando o algoritmo usa $\boldgamma \log k$ como ponto de 
+troca entre seguir o oráculo e recorrer a descartes uniformes, a competitivade do algoritmo resultante é limitada por:
+\begin{equation*}
+\boldalpha(\boldgamma) \le
+2 \cdot \min\left(1 + \frac{1+\boldgamma}{\boldgamma} \sqrt{\frac{\boldeta}{OPT}}, \boldgamma \log k, k \right).
+\end{equation*}
+
+O parâmetro \(\boldgamma\) controla o equilíbrio entre robustez e consistência. Quando \(\boldgamma\) é pequeno, o algoritmo é mais cauteloso: ele abandona cedo o oráculo, o que melhora a garantia de pior caso, mas reduz os ganhos quando o oráculo é confiável. 
+Quando \(\boldgamma\) é grande, o algoritmo confia por mais tempo no oráculo, explorando melhor sua capacidade de antecipar pedidos; porém, isso aumenta a vulnerabilidade a erros, elevando o custo de pior caso.
+}
+
+\block{LRU robusto}{
+  Os algoritmos com predições possuem uma vantagem prática: eles incorporam facilmente heurísticas eficazes. A heurística do algoritmo \textcolor{blue}{\textbf{LRU}} pode ser usada dentro do algoritmo no oráculo:
+  \begin{itemize}
+    \item Uma página \(p\) chega no passo \(i\) 
+    \item Tomamos PróximaOcorrência\((p) = -i\) 
+    \item A página prevista a reaparecer mais longe no futuro coincide com a menos recentemente usada. 
+  \end{itemize}
+  Se nunca recorrêssemos a descartes uniformes, um algoritmo equipado com esse oráculo coincide exatamente com o \textcolor{blue}{\textbf{LRU}}. Essa observação permite \textbf{robustificar} a análise do \textcolor{blue}{\textbf{LRU}}. Embora LRU tenha excelente desempenho empírico, tem competitivade apenas \(\boldalpha = \Theta(k)\). Ao reinterpretar LRU como um oráculo e usar um ponto de troca baseado em \(\log k\) preservamos sua capacidade preditiva enquanto garantimos um limite de pior caso \textbf{logarítmico}.
+}
+
+\block{Algoritmos simplificados (e melhores...)}{
+
+  \innerblock{Combinando algoritmos em caixa-preta. }{
+    \textbf{Teorema (Lykouris 2018)}. Seja \(\Acal\) um algoritmo \(\boldalpha\)-robusto e \(\Bcal\) um algoritmo \(\boldgamma\)-competitivo. Existe um algoritmo \(\Ccal\) que é \(9\boldalpha\)-robusto e \(9\boldgamma\)-competitivo que combina \(\Acal\) e \(\Bcal\) em "caixa-preta".
+
+    \vspace{.5cm}
+
+    O algoritmo \(\Ccal\) adota uma estratégia gulosa. Os algoritmos \(\Acal\) e \(\Bcal\) são simulados em paralelo, mantendo seus estados do cache e seus custos. \(\Ccal\) concorda com a escolha de \(\Acal\) até que \(\text{\textcolor{red}{Custo}}(\Acal) = 2 \times \text{\textcolor{red}{Custo}}(\Bcal)\); neste momento, ele passa a concordar com as escolhas de descarte de \(\Bcal\).
+
+    \vspace{.5cm}
+
+A construção do algoritmo \(\Ccal\) acima não se limita ao problema de caching!
+
   }
+
 
 \begin{center}
   \fcolorbox{darkpurple}{white}{
     \begin{minipage}{0.9\linewidth}
       \centering
       \vspace{4pt}
-      \textbf{\large O \textcolor{blue}{\textbf{OráculoCego}} foi analisado rigorosamente em Wei(2021). Usando o teorema para combinar a consistência do \textcolor{blue}{\textbf{OráculoCego}} com a robustez dos melhores algoritmos disponíveis chega-se em algoritmos melhores e mais simples!}
+      \textbf{\large O \textcolor{blue}{\textbf{OráculoCego}} foi analisado rigorosamente em Wei (2020). Usando o teorema para combinar a consistência do \textcolor{blue}{\textbf{OráculoCego}} com a robustez dos melhores algoritmos disponíveis chega-se em algoritmos melhores e mais simples!}
       \vspace{4pt}
     \end{minipage}
   }
 \end{center}
 
-\textcolor{blue}{\textbf{OrácloCego + LRU}}
+\textcolor{blue}{\textbf{OráculoCego + LRU}}
   \begin{itemize}
-    \item \(\alpha = O\left(\min\left(\frac{\eta}{k\OPT}, k\right)\right)\) 
-    \item Wei (2021) prova que esse é o "melhor" algoritmo determinístico possível
+    \item \(\boldalpha = O\left(\min\left(\frac{\boldeta}{k\OPT}, k\right)\right)\) 
+    \item Wei (2020) prova que esse é o "melhor" algoritmo determinístico possível
   \end{itemize}
 
-  \textcolor{blue}{\textbf{OrácloCego + Marker}}
+  \textcolor{blue}{\textbf{OráculoCego + Marker}}
   \begin{itemize}
-    \item \(\alpha = O\left(2\min\left(\frac{\eta}{k\OPT}, \log k\right)\right)\)
-    \item Rohatgi (2021) mostrou uma cota inferior para algoritmos aleatorizados: \(\alpha \ge \log \min \left(\frac{\eta}{k\log k OPT}\right),k)\)
+    \item \(\boldalpha = O\left(2\min\left(\frac{\boldeta}{k\OPT}, \log k\right)\right)\)
+    \item Rohatgi (2019) mostrou uma cota inferior para algoritmos aleatorizados: \(\boldalpha \ge \log \min \left(\frac{\boldeta}{k\log k OPT}\right),k)\)
     \item um pouco longe ainda...
   \end{itemize}
 }
 
-\block[titleinnersep=.5cm]{Referências}{
+\block{Referências}{
 \normalsize
 
-  [1] T. Lykouris e S. Vassilvitskii. Competitive Caching with Machine Learned Advice.
+  [1] T. Lykouris e S. Vassilvitskii. Competitive Caching with Machine Learned Advice (2018).
 
-  [2] D. Rohatgi. Near-Optimal Bounds for Online Caching with Machine Learned Advice.
+  [2] D. Rohatgi. Near-Optimal Bounds for Online Caching with Machine Learned Advice (2019).
 
-  [3] Alexander Wei. Better and Simpler Learning-Augmented Online Caching.
+  [3] Alexander Wei. Better and Simpler Learning-Augmented Online Caching (2020).
 }
 
 \end{columns}
