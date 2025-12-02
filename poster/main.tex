@@ -61,7 +61,7 @@
 
 \column{0.33}
 
-\block[titleinnersep=.5cm]{Problema de caching tradicional}{
+\block[titleinnersep=.5cm]{Caching tradicional}{
 
 \vspace{.5cm}
 
@@ -69,7 +69,7 @@
 
   \vspace*{.5cm}
 
-  Um cache de tamanho \(\mathbf{k}\) atende pedidos de páginas e gera custo apenas em falhas, que exigem carregar a página e descartar outra segundo alguma política. O objetivo é minimizar falhas.
+  Um cache de tamanho \(\mathbf{k}\) processa uma sequência de páginas em ordem. Se uma página não estiver no cache, ocorre uma \textbf{falha de cache} com custo unitário e uma página do cache deve ser descartada e substituída. O objetivo é minimizar o número de falhas.
 
 \end{minipage}
 \begin{minipage}[c]{0.22\textwidth}
@@ -81,7 +81,7 @@
 
 \vspace*{.5cm}
 
-Dada uma sequência de pedidos \(\boldz\), o menor custo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \textcolor{blue}{\textbf{FIF}}(\emph Furthest-in-the-Future), que descarta a página do cache que permanecerá sem pedidos pelo maior tempo no futuro.
+O custo mínimo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \textcolor{blue}{\textbf{FIF}} (\emph Furthest-in-the-Future), que descarta a página do cache que permanecerá sem pedidos pelo maior tempo no futuro.
 
 
 \begin{center}
@@ -111,7 +111,7 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
     \begin{minipage}{0.9\linewidth}
       \centering
       \vspace{4pt}
-      \large \(\boldalpha = \Theta(k)\) para algoritmos \textbf{determinísticos}.
+      \large \(\boldalpha = \Theta(k)\) para algoritmos \textbf{determinísticos} e
       \(\boldalpha = \Theta(\log k)\) para algoritmos \textbf{aleatorizados}. Na prática, \textcolor{blue}{\textbf{LRU}} é usado, mas pela teoria \(\boldalpha(\text{\textcolor{blue}{\textbf{LRU}}}) = k\)
       \vspace{4pt}
     \end{minipage}
@@ -128,7 +128,7 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
 
   \begin{minipage}[c]{0.2\textwidth}
   \vspace*{.5cm}
-  O algoritmo clássico é aprimorado com um oráclo que prevê entradas futuras. No problema de caching, o oráclo prevê o \textbf{próximo tempo} que a página será solicitada.
+  Um algoritmo clássico pode ser aprimorado com um \textbf{oráculo} que prevê entradas futuras. Em \emph{caching}, o oráculo prevê o \textbf{próximo tempo} que uma página será solicitada.
 \end{minipage}
 
 
@@ -144,7 +144,7 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
     \begin{minipage}{0.9\linewidth}
       \centering
       \vspace{4pt}
-      \textbf{\large Como usar o preditor para melhorar os algoritmos clássicos?}
+      \textbf{\large Como usar o oráculo para melhorar os algoritmos clássicos?}
       \vspace{4pt}
     \end{minipage}
   }
@@ -153,23 +153,19 @@ Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais pr�
 Buscamos algoritmos:
 
 \begin{itemize}
-  \item \textcolor{blue}{\textbf{Consistentes}}: Um oráclo melhor (com \(\eta\) menor) resulta em competitivade menor
-  \item \textcolor{green}{\textbf{Robustos}}: Permanece robusto no pior caso em que o oráclo é arbitrariamente ruim.
+  \item \textcolor{blue}{\textbf{Consistentes}}: se servido de um oráculo melhor (com erro \(\boldeta\) menor) resulta mais competitivo 
+  \item \textcolor{green}{\textbf{Robustos}}: permanece robusto no pior caso, em que o oráculo é arbitrariamente ruim.
 \end{itemize}
 
-O algoritmo básico com predições é o \textcolor{blue}{\textbf{OrácloCego}}, que sempre descarta a página prevista. Esse algoritmo atinge competitivade \(\alpha = \frac{\eta}{\opt}\) e portanto é consistente e não robusto.
+O algoritmo natural com predições é o \textcolor{blue}{\textbf{OráculoCego}}, que sempre descarta a página prevista a ocorrer mais no futuro ("imitando" a estratégia \textcolor{blue}{\textbf{FIF}}). 
 
-Qualquer algoritmo clássico que simplesmente ignora as previsões do oráclo é robusto mas não consistente.
+\begin{itemize}
+  \item \(\boldalpha(\text{\textcolor{blue}{\textbf{OráculoCego}}}) = \Theta(\frac{\boldeta}{OPT})\)
+  \item é, portanto, consistente mas não é robusto.
+\end{itemize}
 
-\innerblock[titleleft]{Erro do preditor}{
-  O erro do preditor é dado por \(\eta\):
-}
+Um algoritmo ótimo que ignora todas as previsões do oráculo é robusto mas não é consistente.
 
-OBJETIVO DO TRABALHO:
-
-Neste trabalho, analisamos os resultados da literatura mais recente sobre Predições e fornecemos uma apresentação mais clara dos conceitos e resultados.
-
- 
 \vspace{.5cm}
 }
 
@@ -177,15 +173,15 @@ Neste trabalho, analisamos os resultados da literatura mais recente sobre Predi�
 
 \block[titleinnersep=.65cm]{Algoritmos de marcação}{
 
-  A sequência \(\boldz\) é separada em \textbf{fases}. 
+  A sequência de pedidos \(\boldz\) é separada em \textbf{fases}. 
 
   \begin{itemize}
-    \item Um acerto de cache marca a página correspondente
-    \item Uma falha de cache descarta uma página desmarcada, traz a página faltante e marca ela
+    \item Um acerto de cache \textcolor{blue}{marca} a página correspondente
+    \item Após uma falha de cache descarta uma página \textcolor{red}{desmarcada}, traz a página faltante e \textcolor{blue}{marca} ela
     \item Quando todas páginas do cache estão marcadas, inicia-se uma nova fase com todas as páginas desmarcadas. 
   \end{itemize}
 
-  \textbf{Algoritmos de marcação só podem descartar páginas desmarcadas}: variam apenas na regra de escolha entre as desmarcadas.
+  \textbf{Algoritmos de marcação só descartam páginas desmarcadas}: variam apenas na regra de escolha entre as desmarcadas.
 
 \begin{minipage}[c]{0.4\textwidth}
   \begin{tikzfigure}\label{fig3}
@@ -198,7 +194,7 @@ Neste trabalho, analisamos os resultados da literatura mais recente sobre Predi�
 
   \begin{itemize}
     \item \textcolor{blue}{\textbf{Marker}}: descarta uniformemente uma página desmarcada do cache. 
-    \item Sem um oráclo, atinge competitivade \(\alpha(\textcolor{blue}{\textbf{Marker}}) = \Theta(\log k)\).
+    \item Sem um oráculo, atinge competitivade \(\alpha(\textcolor{blue}{\textbf{Marker}}) = \Theta(\log k)\).
   \end{itemize}
 
 \begin{center}
@@ -206,7 +202,7 @@ Neste trabalho, analisamos os resultados da literatura mais recente sobre Predi�
     \begin{minipage}{0.9\linewidth}
       \centering
       \vspace{4pt}
-      \textbf{\large Lykouris (2019) e Rohatgi(2020) mostram como usar um oráclo para melhorar a competitivade do algoritmo \textcolor{blue}{\textbf{Marker}}}
+      \textbf{\large Lykouris (2019) e Rohatgi(2020) mostram como usar um oráculo para melhorar a competitivade do algoritmo \textcolor{blue}{\textbf{Marker}}}
       \vspace{4pt}
     \end{minipage}
   }
@@ -217,7 +213,7 @@ Neste trabalho, analisamos os resultados da literatura mais recente sobre Predi�
 
   \begin{minipage}[c]{0.2\textwidth}
     \begin{itemize}
-      \item Cada página \textcolor{green}{\textbf{nova}}, que não esteve presente na fase anterior, inicia uma \textbf{cadeia de descarte}. Essa página não está no cache e resulta no descarte de uma página \textcolor{red}{\textbf{velha}}, cuja próxima ocorrência resulta em outro descarte e assim por diante, até uma página que não aparece de novo na fase. Essas cadeias "explicam" todas as falhas da fase. 
+      \item Cada página \textcolor{green}{\textbf{nova}}, ou seja, que não esteve presente na fase anterior, inicia uma \textbf{cadeia de descarte}. Essa página não está no cache e resulta no descarte de uma página \textcolor{red}{\textbf{velha}}, cuja próxima ocorrência resulta em outro descarte e assim por diante, até chegar uma página que não aparece de novo na fase. Essas cadeias "explicam" todas as falhas da fase. 
       \item O custo total de falhas é a soma dos comprimentos das cadeias.
     \end{itemize}
   \end{minipage}%
@@ -233,91 +229,52 @@ Neste trabalho, analisamos os resultados da literatura mais recente sobre Predi�
 
 \vspace{.5cm}
 
-\textcolor{blue}{\textbf{\(\log k\)-OrácloMarker}} (Lykouris 2019): 
+\textcolor{blue}{\textbf{OráculoMarker}} (Lykouris 2019): 
 \begin{itemize}
-  \item "escuta" o oráclo \(\log k\) vezes por cadeia, depois descarta uniformemente até o final da cadeia
-  \item \(\alpha = 2 + O\left(\min\left(\sqrt{\frac{\eta}{\OPT}}, \log k\right)\right)\)
+  \item segue o conselho do oráculo no máximo \(\log k\) vezes por cadeia, depois descarta uniformemente até o final da cadeia
+  \item \(\boldalpha = 2 + O\left(\min\left(\sqrt{\frac{\boldeta}{\OPT}}, \log k\right)\right)\)
 \end{itemize}
 
 \vspace{.5cm}
 
-\textcolor{blue}{\textbf{\(1\)-OrácloMarker}} (Rohatgi 2021): 
+\textcolor{blue}{\textbf{OráculoMarkerAprimorado}} (Rohatgi 2021): 
   \begin{itemize}
-    \item "escuta" o oráclo apenas uma vez por cadeia, depois descarta uniformemente até o final da cadeia
-    \item \(\alpha = O\left(1+ \min\left(\log \frac{\eta}{\OPT}, \log k\right)\right)\)
+    \item segue o conselho do oráculo apenas uma vez por cadeia, depois descarta uniformemente até o final da cadeia
+    \item \(\boldalpha = O\left(1+ \min\left(\log \frac{\boldeta}{\OPT}, \log k\right)\right)\)
   \end{itemize}
 
-Esse trade-off entre escutar e não escutar o oráclo permite que os algoritmos sejam robustos caso as previsões sejam ruins.
+A escolha de ignorar o oráculo após um determinado tempo permite robustez, protegendo o algoritmo contra previsões ruins.
 }
 
 \block[titleinnersep=.65cm]{Algoritmos simplificados (e melhores...)}{
 
-  \innerblock[titleleft]{Combinando algoritmos caixa-preta. Teorema (Lykouris 2019)}{
-  Seja \(\Acal\) um algoritmo \(\alpha\)-robusto e \(\Bcal\) um algoritmo \(\gamma\)-competitivo. É possível criar um algoritmo caixa-preta \(\Ccal\) que é \(9\alpha\)-robusto e \(9-\gamma\)-competitivo.
+  \innerblock[titleleft]{Combinando algoritmos em caixa-preta. }{
+    \textbf{Teorema (Lykouris 2019)}. Seja \(\Acal\) um algoritmo \(\alpha\)-robusto e \(\Bcal\) um algoritmo \(\gamma\)-competitivo. Existe um algoritmo \(\Ccal\) que é \(9\alpha\)-robusto e \(9\gamma\)-competitivo que combina \(\Acal\) e \(\Bcal\) em "caixa-preta".
   }
 
-  Melhor competitivade conhecida: 
+\begin{center}
+  \fcolorbox{darkpurple}{white}{
+    \begin{minipage}{0.9\linewidth}
+      \centering
+      \vspace{4pt}
+      \textbf{\large O \textcolor{blue}{\textbf{OráculoCego}} foi analisado rigorosamente em Wei(2021). Usando o teorema para combinar a consistência do \textcolor{blue}{\textbf{OráculoCego}} com a robustez dos melhores algoritmos disponíveis chega-se em algoritmos melhores e mais simples!}
+      \vspace{4pt}
+    \end{minipage}
+  }
+\end{center}
 
-  \textcolor{blue}{\textbf{OrácloCego + Marker}} (Wei 2021)
-  \begin{equation*}
-    \alpha = O\left(2\min\left(\frac{\eta}{k\OPT}, \log k\right)\right) \text{(cota inferior (Rohatgi 2021):} \alpha \ge \log \min \left(\frac{\eta}{k\log k OPT}\right),k)
-  \end{equation*}
+\textcolor{blue}{\textbf{OrácloCego + LRU}}
+  \begin{itemize}
+    \item \(\alpha = O\left(\min\left(\frac{\eta}{k\OPT}, k\right)\right)\) 
+    \item Wei (2021) prova que esse é o "melhor" algoritmo determinístico possível
+  \end{itemize}
 
-  \textcolor{blue}{\textbf{OrácloCego + LRU}} (Wei 2021)
-  \begin{equation*}
-    \alpha = O\left(\min\left(\frac{\eta}{k\OPT}, k\right)\right) (melhor determinísticos possível)
-  \end{equation*}
-
-  Este algoritmo usa o teorema acima para combinar a consistência do \textcolor{blue}{\textbf{OrácloCego}} com a robustez dos melhores algoritmos online disponíveis.
-
-
-
-\begin{tikzpicture}[>=Stealth, thick]
-
-% estilos
-\tikzset{
-  cache/.style={fill=blue!60, draw=none},
-  page/.style={circle, minimum size=10mm, inner sep=0pt,
-               draw=none, fill=cyan!60},
-}
-
-% textos superiores
-\node at (-3,1.6) {No passo $i$:};
-\node at (-0.7,1.6) {Pedido:};
-
-% página pedida W
-\node[page] (W) at (0.8,1.6) {W};
-
-% cache no passo i (esquerda)
-\fill[cache] (-1.2,0) ellipse (2.5cm and 1cm);
-
-\node[page] (X) at (-2.2,0) {X};
-\node[page] (Y) at (-1.2,0) {Y};
-\node[page] (Z) at (-0.2,0) {Z};
-
-\node at (-3.2,0) {$k=3$};
-\node at (-1.2,-1.4) {Cache no passo $i$};
-
-% seta de descarte saindo de X
-\draw[->, red, thick] (X) .. controls (-3.4,0.8) .. (-3.8,0.2);
-\node[red] at (-3.8,1.1) {\small descarta};
-
-% cache no passo i+1 (direita)
-\fill[cache] (4.8,0) ellipse (2.5cm and 1cm);
-
-\node[page] (W2) at (3.8,0) {W};
-\node[page] (Y2) at (4.8,0) {Y};
-\node[page] (Z2) at (5.8,0) {Z};
-
-\node at (4.8,-1.4) {Cache no passo $i+1$};
-
-% seta indicando W entrando no cache
-\draw[->, thick] (W) .. controls (2.0,1.2) .. (W2.north);
-
-\end{tikzpicture}
-
-
-
+  \textcolor{blue}{\textbf{OrácloCego + Marker}}
+  \begin{itemize}
+    \item \(\alpha = O\left(2\min\left(\frac{\eta}{k\OPT}, \log k\right)\right)\)
+    \item Rohatgi (2021) mostrou uma cota inferior para algoritmos aleatorizados: \(\alpha \ge \log \min \left(\frac{\eta}{k\log k OPT}\right),k)\)
+    \item um pouco longe ainda...
+  \end{itemize}
 }
 
 \block[titleinnersep=.5cm]{Referências}{
