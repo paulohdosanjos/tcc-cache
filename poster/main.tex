@@ -9,6 +9,7 @@
 \usepackage{cmbright}
 \usepackage{hyperref}
 \usepackage[shortlabels]{enumitem}
+\usepackage{bm}
 
 \usetikzlibrary{positioning}
 
@@ -58,95 +59,265 @@
 
 \begin{columns}
 
-\column{0.5}
+\column{0.33}
 
-\block[titleinnersep=.5cm]{E se um algoritmo online for equipado com um preditor de aprendizado?}{
+\block[titleinnersep=.5cm]{Problema de caching tradicional}{
 
-TIRAR TODA ESSA PRIMEIRA PARTE
+\vspace{.5cm}
 
-Na análise de algoritmos clássicos, frequentemente usa-se a análise de pior caso para se chegar em
-garantias teóricas fortes de desempenho, independentes da entrada. No entanto, em geral, o pior
-caso aparece com pouca frequência na prática - sacrificamos uma possível melhora no algoritmo
-por garantias téoricas que não chegam a ser "alcançadas". Mais normalmente, os dados de entrada
-possuem algum tipo de estrutura que pode ser explorada. Uma predição sobre essa estrutura, que
-pode ser gerada, por exemplo, por um modelo de aprendizado de máquina, pode entrar em jogo
-no algoritmo, melhorando o desempenho sem prescindir de garantias téoricas, possivelmente mais
-fracas porém mais realistas. Essa é a premissa básica da recém-nascida área de algoritmos com
-predições. O objetivo desse estudo é estudar as principais ideias e resultados dessa área, usando o
-problema de caching (paginação online).\vspace{.5cm}
+\begin{minipage}[c]{0.2\textwidth}
 
-\innerblock[titleleft]{Problema de caching}{
- O problema de caching considera um sistema com dois níveis de memória: uma memória rápida ou
-cache de tamanho k e uma memória lenta de tamanho m ≫ k. Uma sequência de itens (páginas),
-é fornecida como entrada ao algoritmo de caching e deve ser processada em ordem. Se a página
-referenciada estiver no cache, o pedido é satisfeito com custo zero e dizemos que houve um acerto
-de cache; caso contrário, acontece uma falha de cache. Neste caso, o algoritmo traz a página da
-memória lenta e coloca no cache antes de satisfazer o pedido. Se o cache estiver cheio, uma página
-no cache deve ser descartada. O algoritmo, então, escolhe uma página a ser descartada de acordo
-com uma regra de substituição ou política. O objetivo do problema é encontrar uma política que
-minimize a quantidade total de falhas de cache. Antes de entrarmos no modelos de predições,
-estudaremos o problema tradicional, ou seja, sem predições.
-}
+  \vspace*{.5cm}
 
-FALAR DOS RESULTADOS CLÁSSICOS LRU E MARKER?
-USAR A INTRODUÇÂO DO WEI COMO BASE
-DESCRIÇÔES VISUAIS DOS ALGORITMOS
+  Um cache de tamanho \(\mathbf{k}\) atende pedidos de páginas e gera custo apenas em falhas, que exigem carregar a página e descartar outra segundo alguma política. O objetivo é minimizar falhas.
 
-0. Framework visual do problema de caching com predições
-1. Robustez e consistência
+\end{minipage}
+\begin{minipage}[c]{0.22\textwidth}
+  \begin{tikzfigure}\label{fig3}
+    \centering
+    \includegraphics[scale=.1]{images/caching.png}
+  \end{tikzfigure}
+\end{minipage}%
 
-\innerblock[titleleft]{Definição}{
- Dizemos que um algoritmo aleatorizado \(\Acal\) para o problema de caching é \(c\)-competitivo se para toda sequência \(z \in \Zcal^*\) existe uma constante \(\alpha\) tal que
+\vspace*{.5cm}
+
+Dada uma sequência de pedidos \(\boldz\), o menor custo \(\opt(\boldz)\) é dada pela estratégia (\textbf{offline}) \textcolor{blue}{\textbf{FIF}}(\emph Furthest-in-the-Future), que descarta a página do cache que permanecerá sem pedidos pelo maior tempo no futuro.
+
+
+\begin{center}
+  \fcolorbox{darkpurple}{white}{
+    \begin{minipage}{0.9\linewidth}
+      \centering
+      \vspace{4pt}
+      \textbf{\large Quão perto de \textbf{OPT} um algoritmo online pode chegar?}
+      \vspace{4pt}
+    \end{minipage}
+  }
+\end{center}
+
+\innerblock[titleleft]{Análise competitiva}{
+  Um algoritmo aleatorizado \(\Acal\) atinge \textcolor{blue}{\textbf{competitivade}} \(\boldalpha\) se para \textbf{toda} sequência de pedidos \(\boldz\) 
   \begin{equation*}
-    \mathbb{E}[c(\Acal, z)] \le c \opt(z) + \alpha
+    \frac{\mathbb{E}[\text{\textcolor{red}{Custo}}(\boldz)]}{\opt(\boldz)} \le \boldalpha 
   \end{equation*}
 }
 
-1. LRU
-2. Marker
+\vspace*{.5cm}
 
-A competitividade do algoritmo \(\lru\) é igual ao tamanho do cache. Isto é, \(\Rcal({\lru}) = k\)
-O algoritmo \(\Acal_{\mathbf{MK}}\) atinge competitivade \(2H_k\), isto é, \(\Rcal(\Acal_{\mathbf{MK}}) \le 2H_k\)
+Portanto, busca-se algoritmos online com competitivade \(\boldalpha\) o mais próximo possível de \(1\).
+
+\begin{center}
+  \fcolorbox{darkpurple}{white}{
+    \begin{minipage}{0.9\linewidth}
+      \centering
+      \vspace{4pt}
+      \large \(\boldalpha = \Theta(k)\) para algoritmos \textbf{determinísticos}.
+      \(\boldalpha = \Theta(\log k)\) para algoritmos \textbf{aleatorizados}. Na prática, \textcolor{blue}{\textbf{LRU}} é usado, mas pela teoria \(\boldalpha(\text{\textcolor{blue}{\textbf{LRU}}}) = k\)
+      \vspace{4pt}
+    \end{minipage}
+  }
+\end{center}
+
+.
+\vspace{.5cm}
 }
+
+\column{0.33}
+
+\block[titleinnersep=.5cm, roundedcorners=0]{E com predições?}{
+
+  \begin{minipage}[c]{0.2\textwidth}
+  \vspace*{.5cm}
+  O algoritmo clássico é aprimorado com um oráclo que prevê entradas futuras. No problema de caching, o oráclo prevê o \textbf{próximo tempo} que a página será solicitada.
+\end{minipage}
+
+
+\begin{minipage}[c]{0.22\textwidth}
+  \begin{tikzfigure}\label{fig3}
+    \centering
+    \includegraphics[scale=.1]{images/caching-pred.png}
+  \end{tikzfigure}
+\end{minipage}%
+
+\begin{center}
+  \fcolorbox{darkpurple}{white}{
+    \begin{minipage}{0.9\linewidth}
+      \centering
+      \vspace{4pt}
+      \textbf{\large Como usar o preditor para melhorar os algoritmos clássicos?}
+      \vspace{4pt}
+    \end{minipage}
+  }
+\end{center}
+
+Buscamos algoritmos:
+
+\begin{itemize}
+  \item \textcolor{blue}{\textbf{Consistentes}}: Um oráclo melhor (com \(\eta\) menor) resulta em competitivade menor
+  \item \textcolor{green}{\textbf{Robustos}}: Permanece robusto no pior caso em que o oráclo é arbitrariamente ruim.
+\end{itemize}
+
+O algoritmo básico com predições é o \textcolor{blue}{\textbf{OrácloCego}}, que sempre descarta a página prevista. Esse algoritmo atinge competitivade \(\alpha = \frac{\eta}{\opt}\) e portanto é consistente e não robusto.
+
+Qualquer algoritmo clássico que simplesmente ignora as previsões do oráclo é robusto mas não consistente.
+
+\innerblock[titleleft]{Erro do preditor}{
+  O erro do preditor é dado por \(\eta\):
+}
+
+OBJETIVO DO TRABALHO:
+
+Neste trabalho, analisamos os resultados da literatura mais recente sobre Predições e fornecemos uma apresentação mais clara dos conceitos e resultados.
+
+ 
+\vspace{.5cm}
+}
+
+\column{0.33}
+
+\block[titleinnersep=.65cm]{Algoritmos de marcação}{
+
+  A sequência \(\boldz\) é separada em \textbf{fases}. 
+
+  \begin{itemize}
+    \item Um acerto de cache marca a página correspondente
+    \item Uma falha de cache descarta uma página desmarcada, traz a página faltante e marca ela
+    \item Quando todas páginas do cache estão marcadas, inicia-se uma nova fase com todas as páginas desmarcadas. 
+  \end{itemize}
+
+  \textbf{Algoritmos de marcação só podem descartar páginas desmarcadas}: variam apenas na regra de escolha entre as desmarcadas.
+
+\begin{minipage}[c]{0.4\textwidth}
+  \begin{tikzfigure}\label{fig3}
+    \centering
+    \includegraphics[scale=.1]{images/mark.png}
+  \end{tikzfigure}
+\end{minipage}%
+
 \vspace{.5cm}
 
-\block[titleinnersep=.5cm]{Algoritmos com predições básicos}{
-  1. Oráclo Cego
-  2. Predictive Marker:
-  \begin{equation*}
-    2 + O\left(\min\left(\sqrt{\frac{\eta}{\OPT}}, \log k\right)\right)
-  \end{equation*}
-\vspace{.5cm}
+  \begin{itemize}
+    \item \textcolor{blue}{\textbf{Marker}}: descarta uniformemente uma página desmarcada do cache. 
+    \item Sem um oráclo, atinge competitivade \(\alpha(\textcolor{blue}{\textbf{Marker}}) = \Theta(\log k)\).
+  \end{itemize}
+
+\begin{center}
+  \fcolorbox{darkpurple}{white}{
+    \begin{minipage}{0.9\linewidth}
+      \centering
+      \vspace{4pt}
+      \textbf{\large Lykouris (2019) e Rohatgi(2020) mostram como usar um oráclo para melhorar a competitivade do algoritmo \textcolor{blue}{\textbf{Marker}}}
+      \vspace{4pt}
+    \end{minipage}
+  }
+\end{center}
+
+
+\innerblock[titleleft]{Cadeias de descarte}{
+
+  \begin{minipage}[c]{0.2\textwidth}
+    \begin{itemize}
+      \item Cada página \textcolor{green}{\textbf{nova}}, que não esteve presente na fase anterior, inicia uma \textbf{cadeia de descarte}. Essa página não está no cache e resulta no descarte de uma página \textcolor{red}{\textbf{velha}}, cuja próxima ocorrência resulta em outro descarte e assim por diante, até uma página que não aparece de novo na fase. Essas cadeias "explicam" todas as falhas da fase. 
+      \item O custo total de falhas é a soma dos comprimentos das cadeias.
+    \end{itemize}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[c]{0.22\textwidth}
+    \begin{tikzfigure}\label{fig3}
+      \centering
+      \includegraphics[scale=.1]{images/cadeia.png}
+    \end{tikzfigure}
+  \end{minipage}%
+
 }
 
-\column{0.5}
+\vspace{.5cm}
 
-\block[titleinnersep=.65cm]{Algoritmos melhorados}{
+\textcolor{blue}{\textbf{\(\log k\)-OrácloMarker}} (Lykouris 2019): 
+\begin{itemize}
+  \item "escuta" o oráclo \(\log k\) vezes por cadeia, depois descarta uniformemente até o final da cadeia
+  \item \(\alpha = 2 + O\left(\min\left(\sqrt{\frac{\eta}{\OPT}}, \log k\right)\right)\)
+\end{itemize}
 
-\innerblock[titleleft]{Teorema (Lykouris 2019)}{
+\vspace{.5cm}
+
+\textcolor{blue}{\textbf{\(1\)-OrácloMarker}} (Rohatgi 2021): 
+  \begin{itemize}
+    \item "escuta" o oráclo apenas uma vez por cadeia, depois descarta uniformemente até o final da cadeia
+    \item \(\alpha = O\left(1+ \min\left(\log \frac{\eta}{\OPT}, \log k\right)\right)\)
+  \end{itemize}
+
+Esse trade-off entre escutar e não escutar o oráclo permite que os algoritmos sejam robustos caso as previsões sejam ruins.
+}
+
+\block[titleinnersep=.65cm]{Algoritmos simplificados (e melhores...)}{
+
+  \innerblock[titleleft]{Combinando algoritmos caixa-preta. Teorema (Lykouris 2019)}{
   Seja \(\Acal\) um algoritmo \(\alpha\)-robusto e \(\Bcal\) um algoritmo \(\gamma\)-competitivo. É possível criar um algoritmo caixa-preta \(\Ccal\) que é \(9\alpha\)-robusto e \(9-\gamma\)-competitivo.
-}
-  1. Marker Melhorado
+  }
 
+  Melhor competitivade conhecida: 
+
+  \textcolor{blue}{\textbf{OrácloCego + Marker}} (Wei 2021)
   \begin{equation*}
-    O\left(1+ \min\left(\log \frac{\eta}{\OPT}, \log k\right)\right)
+    \alpha = O\left(2\min\left(\frac{\eta}{k\OPT}, \log k\right)\right) \text{(cota inferior (Rohatgi 2021):} \alpha \ge \log \min \left(\frac{\eta}{k\log k OPT}\right),k)
   \end{equation*}
 
-  2. Cota inferior
-
-\innerblock[titleleft]{Teorema (Rohatgi 2020)}{
-  Seja \(\Acal\) um algoritmo aleatorizado para caching com acesso a predições. Para todo \(\epsilon\), o algoritmo atinge competitivade não mais que 
+  \textcolor{blue}{\textbf{OrácloCego + LRU}} (Wei 2021)
   \begin{equation*}
-    \Omega\left(\log \min \left(\frac{\epsilon}{k \log k}, k\right)\right)
+    \alpha = O\left(\min\left(\frac{\eta}{k\OPT}, k\right)\right) (melhor determinísticos possível)
   \end{equation*}
-  quando restrito a entradas tais que \(\frac{\eta}{\OPT} \le \epsilon\).
+
+  Este algoritmo usa o teorema acima para combinar a consistência do \textcolor{blue}{\textbf{OrácloCego}} com a robustez dos melhores algoritmos online disponíveis.
+
+
+
+\begin{tikzpicture}[>=Stealth, thick]
+
+% estilos
+\tikzset{
+  cache/.style={fill=blue!60, draw=none},
+  page/.style={circle, minimum size=10mm, inner sep=0pt,
+               draw=none, fill=cyan!60},
 }
 
-  3. Oráclo Cego Melhorado
-}
+% textos superiores
+\node at (-3,1.6) {No passo $i$:};
+\node at (-0.7,1.6) {Pedido:};
 
-\block[titleinnersep=.5cm]{Agradecimentos}{
-  \normalsize
+% página pedida W
+\node[page] (W) at (0.8,1.6) {W};
+
+% cache no passo i (esquerda)
+\fill[cache] (-1.2,0) ellipse (2.5cm and 1cm);
+
+\node[page] (X) at (-2.2,0) {X};
+\node[page] (Y) at (-1.2,0) {Y};
+\node[page] (Z) at (-0.2,0) {Z};
+
+\node at (-3.2,0) {$k=3$};
+\node at (-1.2,-1.4) {Cache no passo $i$};
+
+% seta de descarte saindo de X
+\draw[->, red, thick] (X) .. controls (-3.4,0.8) .. (-3.8,0.2);
+\node[red] at (-3.8,1.1) {\small descarta};
+
+% cache no passo i+1 (direita)
+\fill[cache] (4.8,0) ellipse (2.5cm and 1cm);
+
+\node[page] (W2) at (3.8,0) {W};
+\node[page] (Y2) at (4.8,0) {Y};
+\node[page] (Z2) at (5.8,0) {Z};
+
+\node at (4.8,-1.4) {Cache no passo $i+1$};
+
+% seta indicando W entrando no cache
+\draw[->, thick] (W) .. controls (2.0,1.2) .. (W2.north);
+
+\end{tikzpicture}
+
+
+
 }
 
 \block[titleinnersep=.5cm]{Referências}{
